@@ -2,54 +2,12 @@
 function showHome()
 {
     $mysql = openConnexion();
-    $pageTitle = " - Accueil";
-    
+
     $menu = getMenu();
     
     $top = getTop();
 
-    $articles = Article::getLastvedetteArticles($mysql);
-    $ccarousel = "";
-    $first = true;
-
-    foreach ($articles as $article) {
-        if ($first) {
-            $ccarousel .= "<div class='item active'>";
-            $first = false;
-        } else {
-            $ccarousel .= "<div class='item'>";
-        }
-        $ccarousel .= "<div data-alt='".$article->getTitre()."' ";
-        $ccarousel .= "data-small='img/articles/".$article->getImage()."' ";
-        $ccarousel .= "data-medium='img/articles/".$article->getImage()."' ";
-        $ccarousel .= "data-large='img/articles/".$article->getImage()."'>";
-        $ccarousel .= "</div>";
-        $ccarousel .= "<div class='carousel-caption'>";
-        $ccarousel .= "<div><a href='".$article->getAnnee()."/".$article->getMois()."/".$article->getJour()."/".$article->getPermalien()."'><h1>".$article->getTitre()."</h1></a></div>";
-        $ccarousel .= "<div class='hidden-xs hidden-sm'>";
-        $ccarousel .= "<p>".texte_resume_brut($article->getContenu(), 500)."</p>";
-        $ccarousel .= "</div>";
-        $ccarousel .= "</div>";
-        $ccarousel .= "</div>";
-    }
-
-    ob_start();
-    include 'view/full_width_carousel.php';
-    $full_width_carousel = ob_get_clean();
-
-    $articles = Article::getRandArticles($mysql);
-    $btitre = "";
-
-    foreach ($articles as $article) {
-        $btitre .= "<li><a href='".$article->getAnnee()."/".$article->getMois()."/".$article->getJour()."/".$article->getPermalien()."'><i class='fa fa-arrow-circle-o-right'></i> ".$article->getTitre()."</a></li>";
-    }
-
-    ob_start();
-    include 'view/breaking_news.php';
-    $breaking_news = ob_get_clean();
-
     $articles = Article::getLastArticles($mysql);
-    $first = true;
     $content = "";
 
     foreach ($articles as $article) {
@@ -72,29 +30,12 @@ function showHome()
         $date = returnFrenchDate(date("Y-m-d H:i",$article->getDate()));
         $contenu = texte_resume_brut($article->getContenu(), 600);
 
-        if ($first) {
-            ob_start();
-            include 'view/articles_liste_home_une.php';
-            $content .= ob_get_clean();
-            $first = false;
-        } else {
-            ob_start();
-            include 'view/articles_liste_home.php';
-            $content .= ob_get_clean();
-        }
+        ob_start();
+        include 'view/articles_liste_home.php';
+        $content .= ob_get_clean();
     }
 
     $content .= "<div id='boutonTous'><a class='btn btn-primary btn-sm' href='article/liste/1/all'>Tous les articles</a></div>";
-
-    $widget_recent = getRecent();
-
-    ob_start();
-    include 'view/widget_social.php';
-    $widget_social = ob_get_clean();
-    
-    ob_start();
-    include 'view/widget_pub.php';
-    $widget_pub = ob_get_clean();
 
     include 'layout.php';
 }

@@ -1,73 +1,17 @@
 <!DOCTYPE html>
-<html id="blog-version-1" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#" lang="fr-FR">
+<html id="blog-version-1" lang="fr-FR">
     
     <head>
         <title>LanceA News <?php echo $pageTitle; ?></title>
         <!-- <base href="http://37.59.55.9/news/"> -->
-        <base href="http://37.59.55.9/news/">
-        <!-- <base href="http://localhost/news/">  -->
+        <!-- <base href="http://37.59.55.9/news/"> -->
+        <base href="http://localhost/GaronneExpose/">
         <meta charset="UTF-8">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="LanceA News, ou des informations de qualité sur le monde jeu vidéo -- d'abord à l'attention de la guilde du même nom, mais aussi du reste de l'univers !">
-        <meta name="keywords" lang="fr" content="jeu vidéo, jeux vidéos, jeux vidéo, news, info, infos, information, informations, mmo, mmorpg, rpg, rts, mmorts, fps, mmofps, aventure, point & click, guilde">
+        <meta name="description" content="">
+        <meta name="keywords" lang="fr" content="">
 		<link rel="canonical" href="<?php echo "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; ?>" />
-		
-		<meta property="og:title" content="<?php if(isset($titre)) { echo $titre; } ?>" />
-		<meta property="og:type" content="article" />
-		<meta property="og:image" content="<?php if(isset($image)) { echo "http://news.lancea-online.com/img/articles/".$image; } ?>" />
-		<meta property="og:article:section" content="<?php if(isset($categorie)) { echo $categorie; } ?>" />
-		<meta property="og:title" content="<?php if(isset($titre)) { echo $titre; } ?>" />
-		<meta property="og:description" content="<?php if(isset($contenu)) { echo texte_resume_brut($contenu, 200); } ?>" />
-		<meta property="article:published_time" content="<?php if(isset($article)) { echo $article->getDate(); } ?>" />
-		<meta property="fb:admins" content="1594058512, 1525703866, 100006566533967, 1219068667" />
-		
-		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:site" content="@LanceA_Online" />
-		<meta name="twitter:title" content="<?php if(isset($titre)) { echo $titre; } ?>" />
-		<meta name="twitter:description" content="<?php if(isset($contenu)) { echo texte_resume_brut($contenu, 200); } ?>" />
-		<meta name="twitter:creator" content="@<?php if(isset($twitter)) { echo $twitter; } ?>" />
-		<meta name="twitter:image:src" content="<?php if(isset($image)) { echo "http://news.lancea-online.com/img/articles/".$image; } ?>" />
-
-        <!-- Social page link
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <script type="text/javascript">
-			window.___gcfg = {lang: 'fr'};
-		
-			(function(doc, script) {
-				var js, 
-					fjs = doc.getElementsByTagName(script)[0],
-					frag = doc.createDocumentFragment(),
-					add = function(url, id) {
-						if (doc.getElementById(id)) {return;}
-						js = doc.createElement(script);
-						js.src = url;
-						id && (js.id = id);
-						frag.appendChild( js );
-					};
-				  
-				// Google+ button
-				add('https://apis.google.com/js/plusone.js?publisherid=118003626933935879413');
-				// Facebook SDK
-				add('//connect.facebook.net/fr_FR/all.js#xfbml=1', 'facebook-jssdk');
-				// Twitter SDK
-				add('//platform.twitter.com/widgets.js', 'twitter-wjs');
-
-				fjs.parentNode.insertBefore(frag, fjs);
-			}(document, 'script'));
-        </script>
-
-        <!-- Google Analytics
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <script>
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-            ga('create', 'UA-48618992-1', 'lancea-online.com');
-            ga('send', 'pageview');
-        </script>        
 
         <!-- Stylesheet
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
@@ -83,7 +27,6 @@
         <link rel="stylesheet" href="lib/ckeditor/spoiler.css" type="text/css" /> 
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
-        
         <!-- jQuery 
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <script src="js/jquery-1.10.2.min.js"></script>
@@ -115,9 +58,9 @@
         <header>             
             
             <?php if(isset($top)) { echo $top; } ?>
-            
+
             <?php if(isset($menu)) { echo $menu; } ?>
-            
+
         </header><!--header-->       
                 
         <!-- CONTENT
@@ -125,9 +68,7 @@
         <div id="content"> 
         
             <?php if(isset($page_title)) { echo $page_title; } ?>
-            
-            <?php if(isset($full_width_carousel)) { echo $full_width_carousel; } ?>
-            
+
             <!-- Main Container 
             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
             <div class="container">
@@ -136,9 +77,7 @@
                 
                     <!-- MAIN CONTENT
                     ======================================================== -->
-                    <div id="main-content" class="col-md-8">
-                                                    
-                        <?php if(isset($breaking_news)) { echo $breaking_news; } ?>
+                    <div id="main-content">
 
                         <?php if(isset($articles_liste)) { echo $articles_liste; } ?>
                         
@@ -149,23 +88,7 @@
                         <?php if(isset($error404)) { echo $error404; } ?>
 
                     </div><!--#main-content-->
-                    
-                    <!-- SIDEBAR 
-                    ======================================================== -->
-                    <aside id="sideBar" class="col-md-4">
-                        
-                        <div class="row">
-                                                        
-                            <?php if(isset($widget_social)) { echo $widget_social; } ?>
-                            
-                            <?php if(isset($widget_recent)) { echo $widget_recent; } ?>
-                                                       
-                            <?php if(isset($widget_pub)) { echo $widget_pub; } ?>
 
-                        </div><!--.row-->
-                        
-                    </aside>
-                
                 </div><!--.row-->
                 
                 <?php if(isset($contact)) { echo $contact; } ?> 

@@ -8,12 +8,12 @@ class Article extends Base_Article
 {
     
     /**
-     * Charger les 5 derniers articles
+     * Charger les 4 derniers articles
      * @return articles 
      */
     public static function getLastArticles(PDO $pdo)
     {
-        $pdoStatement = self::_select($pdo, Article::FIELDNAME_PUBLIE.' = 1 AND '.Article::FIELDNAME_DATE." <= UNIX_TIMESTAMP() ", array(Article::FIELDNAME_DATE.' DESC'), 5);
+        $pdoStatement = self::_select($pdo, Article::FIELDNAME_PUBLIE.' = 1 AND '.Article::FIELDNAME_DATE." <= UNIX_TIMESTAMP() ", array(Article::FIELDNAME_DATE.' DESC'), 4);
 
         if (!$pdoStatement->execute()) {
             throw new Exception('Erreur lors du chargement des derniers articles depuis la base de données');

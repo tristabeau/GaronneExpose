@@ -3,7 +3,7 @@
 ErrorDocument 404 /404
 
 RewriteEngine On
-RewriteBase /news/
+RewriteBase /GaronneExpose/
 
 RewriteRule ^staff$ index.php?v=staff [L]
 RewriteRule ^staff/(.+) index.php?v=staff&groupe=$1 [L]

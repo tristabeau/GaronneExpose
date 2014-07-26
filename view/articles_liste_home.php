@@ -1,9 +1,9 @@
-<article class="article-medium listeArticle">
-    
+<article class="article-medium listeArticle col-sm-3">
+
     <div class="row">
-        
+
         <!--Image-->
-        <div class="col-sm-6">
+        <div class="col-sm-12">
             <div class="frame">
                 <div class="image">
                     <img src="img/articles/<?php echo $image; ?>" alt="<?php echo $titre; ?>">
@@ -16,11 +16,11 @@
                     </div>
                 </div>
             </div>
-            <img src="img/shadow.png" class="shadow" alt="shadow">                                    
+            <img src="img/shadow.png" class="shadow" alt="shadow">
         </div>
-        
+
         <!--Content-->
-        <div class="col-sm-6">
+        <div class="col-sm-12">
             <a href="<?php echo $annee; ?>/<?php echo $mois; ?>/<?php echo $jour; ?>/<?php echo $permalien; ?>" class="title"><h4><?php echo $titre; ?></h4></a>
             <p class="post-meta">
                 <small><?php echo $date; ?></small> &nbsp;
@@ -28,11 +28,11 @@
                 <a href="<?php echo $annee; ?>/<?php echo $mois; ?>/<?php echo $jour; ?>/<?php echo $permalien; ?>#commentaire"><span class="fa fa-comments"></span> <?php echo $nbCom; ?></a> &nbsp;
                 <a href="<?php echo $annee; ?>/<?php echo $mois; ?>/<?php echo $jour; ?>/<?php echo $permalien; ?>"><span class="fa fa-eye"></span> <?php echo $nbVue; ?></a>
             </p>
-            <p class="hyphenate text"><?php echo $contenu; ?></p>                                    
+            <p class="hyphenate text"><?php echo $contenu; ?></p>
         </div>
         
     </div>
-    
+
     <!--Footer-->
     <div class="footer">
         <ul class="tags">
