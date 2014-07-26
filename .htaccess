@@ -1,0 +1,37 @@
+<IfModule mod_rewrite.c>
+
+ErrorDocument 404 /404
+
+RewriteEngine On
+RewriteBase /news/
+
+RewriteRule ^staff$ index.php?v=staff [L]
+RewriteRule ^staff/(.+) index.php?v=staff&groupe=$1 [L]
+RewriteRule ^recherche(/(\d{4})(/(\d{2})(/(\d{2}))?)?)?/([^/]*)(/(\d+)§)? index.php?v=article&a=search&s=$7&p=$9&y=$2&m=$4&j=$6 [L]
+
+
+RewriteRule ^([0-9]+)/([0-9]+)/([0-9]+)/(\D.*) index.php?v=article&a=detail&y=$1&m=$2&j=$3&p=$4 [L]
+RewriteRule ^(\d{4})(/(\d{2})(/(\d{2}))?)?(/(\d+)§)? index.php?v=article&a=liste&y=$1&m=$3&j=$5&c=all&p=$7 [L]
+
+
+RewriteRule ^membre/inscription index.php?v=membre&a=inscription [L]
+RewriteRule ^membre/validation/([0-9]+)/(.+) index.php?v=membre&a=validation&m=$1&c=$2 [L]
+RewriteRule ^membre/password index.php?v=membre&a=password [L]
+RewriteRule ^membre/deconnexion index.php?v=membre&a=deconnexion [L]
+RewriteRule ^membre/modification index.php?v=membre&a=modMembre [L]
+
+RewriteRule ^article/proposer index.php?v=article&a=proposer [L]
+RewriteRule ^article/liste(/([a-zA-Z]{1,5}))?(/(\d{4})(/(\d{2})(/(\d{2}))?)?)?/(\d+)§ index.php?v=article&a=liste&c=$2&y=$4&m=$6&j=$8&p=$9 [L]
+RewriteRule ^article/liste(/([a-zA-Z]{1,5}))?(/(\d{4})(/(\d{2})(/(\d{2}))?)?)? index.php?v=article&a=liste&c=$2&y=$4&m=$6&j=$8&p=1 [L]
+RewriteRule ^article(/)? index.php?v=article&a=liste&c=all&y=all&m=all&j=all&p=1 [L]
+
+
+RewriteRule ^profil/([^/]+)(/(\d{4})(/(\d{2})(/(\d{2}))?)?)?(/(\d+)§)? index.php?v=membre&a=profil&n=$1&y=$3&m=$5&j=$7&p=$9 [L]
+
+
+RewriteRule ^contact index.php?v=contact [L]
+RewriteRule ^charte index.php?v=charte [L]
+
+RewriteRule ^404 index.php?v=404 [L]
+
+</IfModule>
