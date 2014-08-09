@@ -1,4 +1,4 @@
-<article class="article-medium listeArticle col-sm-3">
+<article class="article-medium listeArticle col-md-4">
 
     <div class="row">
 

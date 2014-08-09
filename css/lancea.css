@@ -233,12 +233,12 @@ textarea{
         z-index: 999;
     }
 
-    #main-content{
+    #center-content{
         padding-top: 60px !important;
         margin-bottom: 10px;
     }
     
-    #sideBar{
+    #right-content{
         padding: 60px;
     }
     
@@ -248,7 +248,7 @@ textarea{
 }
 
 @media (max-width:992px){
-    #main-content{
+    #center-content{
         margin-bottom: 10px;
         padding-top: 0px !important;
     }

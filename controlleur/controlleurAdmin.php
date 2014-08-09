@@ -50,7 +50,7 @@ function showAdminCategorie()
     $widget_social = ob_get_clean();
     
     ob_start();
-    include 'view/widget_pub.php';
+    include 'view/widget_partenaires.php';
     $widget_pub = ob_get_clean();
 
     include 'layout.php';
@@ -100,7 +100,7 @@ function showAdminModCat()
         $widget_social = ob_get_clean();
     
         ob_start();
-        include 'view/widget_pub.php';
+        include 'view/widget_partenaires.php';
         $widget_pub = ob_get_clean();
 
         include 'layout.php';
@@ -147,7 +147,7 @@ function showAdminNewCat()
         $widget_social = ob_get_clean();
     
         ob_start();
-        include 'view/widget_pub.php';
+        include 'view/widget_partenaires.php';
         $widget_pub = ob_get_clean();
 
         include 'layout.php';
@@ -224,7 +224,7 @@ function showAdminGroupe()
     $widget_social = ob_get_clean();
     
     ob_start();
-    include 'view/widget_pub.php';
+    include 'view/widget_partenaires.php';
     $widget_pub = ob_get_clean();
 
     include 'layout.php';
@@ -295,7 +295,7 @@ function showAdminMembre()
     $widget_social = ob_get_clean();
     
     ob_start();
-    include 'view/widget_pub.php';
+    include 'view/widget_partenaires.php';
     $widget_pub = ob_get_clean();
     include 'layout.php';
 }
@@ -375,7 +375,7 @@ function showAdminModMembre()
     $widget_social = ob_get_clean();
     
     ob_start();
-    include 'view/widget_pub.php';
+    include 'view/widget_partenaires.php';
     $widget_pub = ob_get_clean();
 
     include 'layout.php';
@@ -435,7 +435,7 @@ function showAdminNewMembre()
     $widget_social = ob_get_clean();
     
     ob_start();
-    include 'view/widget_pub.php';
+    include 'view/widget_partenaires.php';
     $widget_pub = ob_get_clean();
 
     include 'layout.php';
@@ -508,7 +508,7 @@ function showAdminArticle()
     $widget_social = ob_get_clean();
     
     ob_start();
-    include 'view/widget_pub.php';
+    include 'view/widget_partenaires.php';
     $widget_pub = ob_get_clean();
 
     include 'layout.php';
@@ -651,7 +651,7 @@ function showAdminNewArticle()
         $widget_social = ob_get_clean();
     
         ob_start();
-        include 'view/widget_pub.php';
+        include 'view/widget_partenaires.php';
         $widget_pub = ob_get_clean();
 
         include 'layout.php';
@@ -812,7 +812,7 @@ function showAdminModArticle()
     $widget_social = ob_get_clean();
     
     ob_start();
-    include 'view/widget_pub.php';
+    include 'view/widget_partenaires.php';
     $widget_pub = ob_get_clean();
 
     include 'layout.php';

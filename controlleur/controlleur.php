@@ -35,6 +35,14 @@ function showHome()
         $content .= ob_get_clean();
     }
 
+    ob_start();
+    include 'view/widget_social.php';
+    $widget_social = ob_get_clean();
+
+    ob_start();
+    include 'view/widget_partenaires.php';
+    $widget_partenaires = ob_get_clean();
+
     $content .= "<div id='boutonTous'><a class='btn btn-primary btn-sm' href='article/liste/1/all'>Tous les articles</a></div>";
 
     include 'layout.php';
@@ -151,7 +159,7 @@ function showStaff()
     $widget_social = ob_get_clean();
     
     ob_start();
-    include 'view/widget_pub.php';
+    include 'view/widget_partenaires.php';
     $widget_pub = ob_get_clean();
 
     include 'layout.php';
@@ -161,7 +169,7 @@ function showDetailArticle()
 {
     $mysql = openConnexion();
 
-    global $admin, $auteur;
+    global $admin, $artiste;
 
     $menu = getMenu();
     $top = getTop(); 
@@ -259,7 +267,7 @@ function showDetailArticle()
     $widget_social = ob_get_clean();
     
     ob_start();
-    include 'view/widget_pub.php';
+    include 'view/widget_partenaires.php';
     $widget_pub = ob_get_clean();
 
     include 'layout.php';
@@ -380,7 +388,7 @@ function showListeArticle()
     $widget_social = ob_get_clean();
     
     ob_start();
-    include 'view/widget_pub.php';
+    include 'view/widget_partenaires.php';
     $widget_pub = ob_get_clean();
 
     include 'layout.php';
@@ -479,7 +487,7 @@ function showSearchArticle()
     $widget_social = ob_get_clean();
     
     ob_start();
-    include 'view/widget_pub.php';
+    include 'view/widget_partenaires.php';
     $widget_pub = ob_get_clean();
 
     include 'layout.php';
@@ -505,7 +513,7 @@ function show404()
     $widget_social = ob_get_clean();
     
     ob_start();
-    include 'view/widget_pub.php';
+    include 'view/widget_partenaires.php';
     $widget_pub = ob_get_clean();
 
     include 'layout.php';
@@ -674,7 +682,7 @@ function showDeconnexionMembre()
     $widget_social = ob_get_clean();
     
     ob_start();
-    include 'view/widget_pub.php';
+    include 'view/widget_partenaires.php';
     $widget_pub = ob_get_clean();
 
 
@@ -808,7 +816,7 @@ function showProfilMembre()
     $widget_social = ob_get_clean();
     
     ob_start();
-    include 'view/widget_pub.php';
+    include 'view/widget_partenaires.php';
     $widget_pub = ob_get_clean();
 
     include 'layout.php';
@@ -818,7 +826,7 @@ function showModMembre()
 {
     $mysql = openConnexion();
 
-    global $admin, $auteur, $membreCo;
+    global $admin, $artiste, $membreCo;
     
     $erreur = "";
 
@@ -880,7 +888,7 @@ function showModMembre()
     $widget_social = ob_get_clean();
     
     ob_start();
-    include 'view/widget_pub.php';
+    include 'view/widget_partenaires.php';
     $widget_pub = ob_get_clean();
 
     include 'layout.php';
@@ -889,7 +897,7 @@ function showModMembre()
 function getMenu()
 {
     $mysql = openConnexion();
-    global $admin, $auteur;
+    global $admin, $artiste;
 
     $liste_categorie = "<li><a href='article/liste/all/'>Tous les articles</a></li>";
     $categories = Categorie::getCategoriePere($mysql);
@@ -1213,7 +1221,7 @@ function showProposerArticle()
     $widget_social = ob_get_clean();
 
     ob_start();
-    include 'view/widget_pub.php';
+    include 'view/widget_partenaires.php';
     $widget_pub = ob_get_clean();
 
     include 'layout.php';

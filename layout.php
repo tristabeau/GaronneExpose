@@ -75,9 +75,9 @@
                 
                 <div class="row">
                 
-                    <!-- MAIN CONTENT
+                    <!-- CENTER CONTENT
                     ======================================================== -->
-                    <div id="main-content">
+                    <div id="center-content" class="col-md-9">
 
                         <?php if(isset($articles_liste)) { echo $articles_liste; } ?>
                         
@@ -87,7 +87,15 @@
                         
                         <?php if(isset($error404)) { echo $error404; } ?>
 
-                    </div><!--#main-content-->
+                    </div><!--#center-content-->
+
+                    <!-- SIDE CONTENT
+                    ======================================================== -->
+                    <aside id="right-content" class="col-md-3">
+                        <?php if(isset($widget_social)) { echo $widget_social; } ?>
+
+                        <?php if(isset($widget_partenaires)) { echo $widget_partenaires; } ?>
+                    </aside><!--#side-content-->
 
                 </div><!--.row-->
                 

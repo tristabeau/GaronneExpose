@@ -20,20 +20,32 @@
                 <li><a href="."><i class="fa fa-home"></i></a></li>
                 <li><a href=".">Accueil</a></li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Articles <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Présentation <b class="caret"></b></a>
                     <ul class="nav dropdown-menu">
-                        <?php echo $liste_categorie; ?>
+                        <li><a href="">Présentation de l'association</a></li>
+                        <li><a href="">Le bureau</a></li>
+                        <li><a href="">Documents</a></li>
+                        <li><a href="">Projet</a></li>
                     </ul>
                 </li>
-                <li><a href="staff">Staff</a></li>
-                <li><a href="http://forum.lancea-online.com">Forum</a></li>
-                <?php if ($admin || $auteur) { ?>
+                <li><a href="staff">Galerie des artistes</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Qui parle de nous <b class="caret"></b></a>
+                    <ul class="nav dropdown-menu">
+                        <li><a href="">Evenement</a></li>
+                        <li><a href="">Galerie</a></li>
+                        <li><a href="">Revue de presse</a></li>
+                    </ul>
+                </li>
+                <li><a href="staff">Partenaires</a></li>
+                <li><a href="staff">Contactez nous</a></li>
+                <?php if ($admin || $artiste) { ?>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administration <b class="caret"></b></a>
                     <ul class="nav dropdown-menu">
                         <?php if ($admin) { ?>
-                        <li><a href="index.php?v=admin&a=groupe">Gestion des groupes</a></li>
-                        <li><a href="index.php?v=admin&a=membre">Gestion des membres</a></li>
+                            <li><a href="index.php?v=admin&a=groupe">Gestion des groupes</a></li>
+                            <li><a href="index.php?v=admin&a=membre">Gestion des membres</a></li>
                         <?php } ?>
                         <li><a href="index.php?v=admin&a=categorie">Gestion des catégories</a></li>
                         <li><a href="index.php?v=admin&a=article">Gestion des articles</a></li>

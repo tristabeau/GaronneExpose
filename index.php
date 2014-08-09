@@ -17,7 +17,7 @@ require_once "controlleur/controlleurAdmin.php";
 $mysql = openConnexion();
 
 $admin = false;
-$auteur = false;
+$artiste = false;
 
 if (isset($_COOKIE["membre"])) {
     $_SESSION["idMembre"] = $_COOKIE["membre"];
@@ -29,7 +29,7 @@ if (isset($_SESSION["idMembre"])) {
         $admin = true;
     }
     if (($membreCo->getGroupeId() == 2) || ($membreCo->getGroupeId() == 4)) {
-        $auteur = true;
+        $artiste = true;
     }
 }
 
@@ -59,7 +59,7 @@ if (isset($_GET["v"])) {
             break;
 
         case "admin":
-            if ($admin || $auteur) {
+            if ($admin || $artiste) {
                 switch ($_GET["a"]) {
                     case "article":
                         showAdminArticle();
