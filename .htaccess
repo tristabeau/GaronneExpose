@@ -5,6 +5,9 @@ ErrorDocument 404 /404
 RewriteEngine On
 RewriteBase /GaronneExpose/
 
+RewriteRule ^presentation  index.php?v=presentation [L]
+RewriteRule ^bureau  index.php?v=bureau [L]
+
 RewriteRule ^staff$ index.php?v=staff [L]
 RewriteRule ^staff/(.+) index.php?v=staff&groupe=$1 [L]
 RewriteRule ^recherche(/(\d{4})(/(\d{2})(/(\d{2}))?)?)?/([^/]*)(/(\d+)§)? index.php?v=article&a=search&s=$7&p=$9&y=$2&m=$4&j=$6 [L]
@@ -30,7 +33,6 @@ RewriteRule ^profil/([^/]+)(/(\d{4})(/(\d{2})(/(\d{2}))?)?)?(/(\d+)§)? index.ph
 
 
 RewriteRule ^contact index.php?v=contact [L]
-RewriteRule ^presentation  index.php?v=presentation [L]
 RewriteRule ^charte index.php?v=charte [L]
 
 RewriteRule ^404 index.php?v=404 [L]

@@ -46,6 +46,10 @@ if (isset($_GET["v"])) {
             showPresentation();
             break;
 
+        case "bureau":
+            showBureau();
+            break;
+
         case "contact":
             showContact();
             break;

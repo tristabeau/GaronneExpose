@@ -23,7 +23,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Présentation <b class="caret"></b></a>
                     <ul class="nav dropdown-menu">
                         <li><a href="presentation">Présentation de l'association</a></li>
-                        <li><a href="">Le bureau</a></li>
+                        <li><a href="bureau">Le bureau</a></li>
                         <li><a href="">Documents</a></li>
                         <li><a href="">Projet</a></li>
                     </ul>

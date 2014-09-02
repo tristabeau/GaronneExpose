@@ -50,9 +50,9 @@ function showHome()
 
 function showPresentation ()
 {
-    $menu = getMenu();
-
     $pageTitle = " - Présentation";
+
+    $menu = getMenu();
 
     $top = getTop();
 
@@ -70,6 +70,43 @@ function showPresentation ()
 
     include 'layout.php';
 }
+
+function showBureau()
+{
+    $mysql = openConnexion();
+
+    $pageTitle = " - Bureau";
+
+    $menu = getMenu();
+
+    $top = getTop();
+
+    $content = "";
+
+    $auteurs = Membre::selectBureau($mysql);
+
+    foreach ($auteurs as $auteur) {
+        $membreId = $auteur->getIdMembre();
+        $description = texte_resume_brut($auteur->getDescr(), 250);
+        $pseudo = $auteur->getPseudo();
+        $avatar = md5(strtolower(trim($auteur->getImage())));
+
+        ob_start();
+        include 'view/membre.php';
+        $content .= ob_get_clean();
+    }
+
+    ob_start();
+    include 'view/widget_social.php';
+    $widget_social = ob_get_clean();
+
+    ob_start();
+    include 'view/widget_partenaires.php';
+    $widget_pub = ob_get_clean();
+
+    include 'layout.php';
+}
+
 
 function showContact()
 {
@@ -167,7 +204,7 @@ function showStaff()
         $avatar = md5(strtolower(trim($auteur->getImage())));
 
         ob_start();
-        include 'view/staff.php';
+        include 'view/membre.php';
         $content .= ob_get_clean();
     }
     

@@ -5,7 +5,7 @@
 
     <!--Content-->
     <a href="profil/<?php echo $pseudo; ?>" class="avatar">
-        <img src="http://www.gravatar.com/avatar/<?php echo $avatar; ?>?s=120&d=mm" alt="<?php echo $pseudo; ?>" class="avatar" />
+        <img src="" class="avatar" />
         <div class="image-light"></div>
     </a>
     <p><?php echo $description; ?></p>
@@ -15,6 +15,3 @@
     </div>
 
 </section>
-
-<br />
-<br />

@@ -33,13 +33,13 @@ class Membre extends Base_Membre
         return self::fetchAll($pdo,$pdoStatement);
     } 
         
-        /**
-     * Cherche les membres du staff
-     * @return Membre 
+    /**
+     * Cherche les membres du bureau
+     * @return Membre(s)
      */
-    public static function selectStaff(PDO $pdo)
+    public static function selectBureau(PDO $pdo)
     {
-        $pdoStatement = self::_select($pdo,array(Membre::FIELDNAME_GROUPE_IDGROUPE.' != 1'));
+        $pdoStatement = self::_select($pdo,array(Membre::FIELDNAME_GROUPE_IDGROUPE.' = 3'));
         if (!$pdoStatement->execute()) {
             throw new Exception('Erreur lors du chargement des membres depuis la base de données');
         }
