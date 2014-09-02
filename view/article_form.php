@@ -2,13 +2,9 @@
 <div class='alert alert-success'>
     <strong>Règles</strong> 
     <ul>
-        <li>Lire la <a href="charte">charte</a> de publication</li>
         <li>Mettre une image obligatoirement de grande taille (700x400 minimum)</li>
         <li>Mettre une image obligatoirement d'un poid maximum de 512 Ko</li>
-        <li>Pas de copier / coller d'autre site</li>
         <li>Le titre ne doit pas commencer par un chiffre</li>
-        <li>Faire une première relecture</li>
-        <li>Repasser en non corrigé, si vous faite une modification</li>
     </ul>
 </div>
 <div>
@@ -52,26 +48,6 @@
                 </td>
             </tr>
             <tr>
-                <td><label for="corrige">Corrigé</label></td>
-                <td>
-                    <div class="btn-group" data-toggle-name="corrige" data-toggle="buttons-radio" >
-                      <button type="button" value="0" id="corrigeNon" class="btn <?php echo $butCorNon; ?>" data-toggle="button">Non</button>
-                      <button type="button" value="1" id="corrigeOui" class="btn <?php echo $butCorOui; ?>" data-toggle="button">Oui</button>
-                    </div>
-                    <input type="hidden" name="corrige"  id="corrige" value="<?php echo $corrige; ?>" />
-                </td>
-            </tr> 
-            <tr>
-                <td><label for="vedette">Vedette</label></td>
-                <td>
-                    <div class="btn-group" data-toggle-name="vedette" data-toggle="buttons-radio" >
-                      <button type="button" value="0" id="vedetteNon" class="btn <?php echo $butVedNon; ?>" data-toggle="button">Non</button>
-                      <button type="button" value="1" id="vedetteOui" class="btn <?php echo $butVedOui; ?>" data-toggle="button">Oui</button>
-                    </div>
-                    <input type="hidden" name="vedette"  id="vedette" value="<?php echo $vedette; ?>" />
-                </td>
-            </tr> 
-            <tr>
                 <td colspan="2">
                     <div class="myfileupload-buttonbar">
                         <label class="myui-button">
@@ -93,16 +69,6 @@
                     <textarea cols="80" class="ckeditor" id="contenu" name="contenu" rows="10"><?php echo $contenu; ?></textarea>
                 </td>
             </tr>
-            <tr>
-                <td colspan="2">
-                    <label for="commentaire">Commentaire correcteur</label>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <textarea cols="80" class="ckeditor" id="commentaire" name="commentaire" rows="10"><?php echo $commentaire; ?></textarea>
-                </td>
-            </tr> 
         </table>
     </form>
   
@@ -110,7 +76,7 @@
     
     <div class="buttons">
         <button id="sub" class="btn btn-primary" form="formArticle"><?php echo $action; ?></button>
-        <button class="btn btn-primary" onclick="window.location.href='index.php?v=admin&a=article'">Annuler</button>
+        <button class="btn btn-primary" onclick="window.location.href='index.php?v=admin&a=contenus'">Annuler</button>
     </div>
     
     <br />

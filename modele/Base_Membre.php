@@ -359,16 +359,12 @@ abstract class Base_Membre
     {
         // Supprimer les articles associé(e)s
         $select = $this->selectArticles();
-        while ($article = Article::fetch($this->_pdo,$select)) {
-            $article->delete();
+        if (count($select)) {
+            while ($article = Article::fetch($this->_pdo,$select)) {
+                $article->delete();
+            }
         }
-        
-        // Supprimer les commentaires associé(e)s
-        $select = $this->selectCommentaires();
-        while ($commentaire = Commentaire::fetch($this->_pdo,$select)) {
-            $commentaire->delete();
-        }
-        
+
         // Supprimer le/la membre
         $pdoStatement = $this->_pdo->prepare('DELETE FROM '.Membre::TABLENAME.' WHERE '.Membre::FIELDNAME_IDMEMBRE.' = ?');
         if (!$pdoStatement->execute(array($this->getIdMembre()))) {

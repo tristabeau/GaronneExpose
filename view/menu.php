@@ -44,10 +44,10 @@
                     <ul class="nav dropdown-menu">
                         <?php if ($admin) { ?>
                             <li><a href="index.php?v=admin&a=groupe">Gestion des groupes</a></li>
-                            <li><a href="index.php?v=admin&a=membre">Gestion des membres</a></li>
+                            <li><a href="index.php?v=admin&a=artistes">Gestion des artistes</a></li>
                         <?php } ?>
                         <li><a href="index.php?v=admin&a=categorie">Gestion des catégories</a></li>
-                        <li><a href="index.php?v=admin&a=article">Gestion des articles</a></li>
+                        <li><a href="index.php?v=admin&a=contenus">Gestion des contenus</a></li>
                     </ul>
                 </li>
                 <?php } ?>

@@ -10,8 +10,8 @@
     </form>  
     
     <ul class="nav navbar-nav">
-        <li><a href="membre/inscription">Inscription</a></li>
-        <li><a href="membre/password">Mot de passe oublié ?</a></li>
+        <li><a href="artiste/inscription">Inscription</a></li>
+        <li><a href="artiste/password">Mot de passe oublié ?</a></li>
     </ul>
     
 </div>

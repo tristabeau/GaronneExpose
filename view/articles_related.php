@@ -11,6 +11,5 @@
     <a href="<?php echo $annee; ?>/<?php echo $mois; ?>/<?php echo $jour; ?>/<?php echo $permalien; ?>" class="title"><h4><?php echo $titre; ?></h4></a>
     <p class="post-meta">
         <small><?php echo $date; ?></small> &nbsp;
-        <a href="<?php echo $annee; ?>/<?php echo $mois; ?>/<?php echo $jour; ?>/<?php echo $permalien; ?>#commentaire"><span class="fa fa-comments"></span> <?php echo $nbCom; ?></a> &nbsp;
     </p>
 </article>

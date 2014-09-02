@@ -25,7 +25,6 @@
             <p class="post-meta">
                 <small><?php echo $date; ?></small> &nbsp;
                 <a href="profil/<?php echo $pseudo; ?>"><span class="fa fa-user"></span> <?php echo $pseudo; ?></a> &nbsp;
-                <a href="<?php echo $annee; ?>/<?php echo $mois; ?>/<?php echo $jour; ?>/<?php echo $permalien; ?>#commentaire"><span class="fa fa-comments"></span> <?php echo $nbCom; ?></a> &nbsp;
                 <a href="<?php echo $annee; ?>/<?php echo $mois; ?>/<?php echo $jour; ?>/<?php echo $permalien; ?>"><span class="fa fa-eye"></span> <?php echo $nbVue; ?></a>
             </p>
             <p class="hyphenate text"><?php echo $contenu; ?></p>

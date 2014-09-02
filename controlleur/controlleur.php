@@ -56,6 +56,8 @@ function showHome()
 {
     $mysql = openConnexion();
 
+    $pageTitle = "";
+
     $menu = getMenu();
     
     $top = getTop();
@@ -79,7 +81,6 @@ function showHome()
         $categorie = utf8_encode($cat->getNom());
         $tag = $cat->getTag();
         $membreId = $membre->getIdMembre();
-        $nbCom = count($article->selectCommentaires());
         $date = returnFrenchDate(date("Y-m-d H:i",$article->getDate()));
         $contenu = texte_resume_brut($article->getContenu(), 600);
 
@@ -96,7 +97,7 @@ function showHome()
     include 'view/widget_partenaires.php';
     $widget_partenaires = ob_get_clean();
 
-    $content .= "<div id='boutonTous'><a class='btn btn-primary btn-sm' href='article/liste/1/all'>Tous les articles</a></div>";
+    $content .= "<div id='boutonTous'><a class='btn btn-primary btn-sm' href='contenus/liste/1/all'>Anciennes publications</a></div>";
 
     include 'layout.php';
 }
@@ -142,7 +143,7 @@ function show404()
     include 'view/404.php';
     $error404 = ob_get_clean();
 
-    $widget_recent = getRecent();
+    
 
     ob_start();
     include 'view/widget_social.php';
@@ -465,7 +466,6 @@ function showProfilArtiste()
             $jour = $article->getJour();
             $permalien = $article->getPermalien();
             $image = $article->getImage();
-            $nbCom = count($article->selectCommentaires());
             $date = date("d/m/Y H:i",$article->getDate());
 
             ob_start();
@@ -582,7 +582,6 @@ function showEvenements()
             $categorie = utf8_encode($cat->getNom());
             $tag = $cat->getTag();
             $membreId = $membre->getIdMembre();
-            $nbCom = count($article->selectCommentaires());
             $date = returnFrenchDate(date("Y-m-d H:i",$article->getDate()));
             $contenu = texte_resume_brut($article->getContenu(), 250);
 
@@ -624,97 +623,6 @@ function showEvenements()
 
 
 
-
-
-function showCharte()
-{
-    $pageTitle = " - Charte de publication";
-    
-    $menu = getMenu();
-    $top = getTop();
-    
-    ob_start();
-    include 'view/charte.php';
-    $contact = ob_get_clean();
-
-    include 'layout.php';
-}
-
-function showStaff()
-{
-    $mysql = openConnexion();
-
-    $pageTitle = " - Staff";
-    
-    $menu = getMenu();
-    $top = getTop();    
-
-    $groupes = Groupe::loadAll($mysql);
-    $groupe = "<option value='all'>Tous</option>";
-
-    foreach ($groupes as $g) {
-        if ($g->getIdGroupe() != 1) {
-            $selected = ((isset($_GET["groupe"]) && ($g->getNom() == $_GET["groupe"])) ? "selected" : "");
-            $groupe .= "<option value='".utf8_encode($g->getNom())."' ".$selected.">".utf8_encode($g->getNom())."</option>";
-        }
-    }
-
-    $content = "<div id='staff'><form name='formAction' method='get' action='' id='formAction'>";
-    $content .= "<input name='v' value='staff' type='hidden' />";
-    $content .= "<select name='groupe' onchange='selectGroupe($(this).val());'>".$groupe."</select></form></div><br /><br />";
-    $titre = "LanceA News";
-    $categorie = "Le staff";
-
-    if (isset($_GET["groupe"]) && ($_GET["groupe"] != "")) {
-        if ($_GET["groupe"] == "all") {
-            $auteurs = Membre::selectStaff($mysql);
-            $categorie .= " : Tous";
-        } else {
-            $gr = Groupe::selectByNom($mysql, $_GET["groupe"]);
-            if (count($gr)) {
-                $auteurs = Membre::selectByGroupe($mysql, $gr[0]);
-                $categorie .= " : ".$gr[0]->getNom();
-            } else {
-                $host = $_SERVER['HTTP_HOST'];
-                $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-                header ("Location:http://$host$uri/staff");
-            }
-        }
-
-    }   else {
-        $auteurs = Membre::selectStaff($mysql);
-        $categorie .= " : Tous";
-    }
-    
-
-    foreach ($auteurs as $auteur) {
-        $membreId = $auteur->getIdMembre();
-        $description = texte_resume_brut($auteur->getDescr(), 250);
-        $pseudo = $auteur->getPseudo();
-        $avatar = md5(strtolower(trim($auteur->getImage())));
-
-        ob_start();
-        include 'view/membre.php';
-        $content .= ob_get_clean();
-    }
-    
-    ob_start();
-    include 'view/page_title.php';
-    $page_title = ob_get_clean();
-
-    $widget_recent = getRecent();
-
-    ob_start();
-    include 'view/widget_social.php';
-    $widget_social = ob_get_clean();
-    
-    ob_start();
-    include 'view/widget_partenaires.php';
-    $widget_pub = ob_get_clean();
-
-    include 'layout.php';
-}
-
 function showDetailArticle()
 {
     $mysql = openConnexion();
@@ -725,7 +633,7 @@ function showDetailArticle()
     $top = getTop(); 
 
     $a = Article::selectDetail($mysql, $_GET["y"], $_GET["m"], $_GET["j"], $_GET["p"]);
-    
+
     if (count($a)) {
         $article = $a[0];
         
@@ -734,11 +642,6 @@ function showDetailArticle()
         $article->setNb_vues($article->nbVues());        
         
         $membre = $article->getMembre();
-
-        if (isset($_POST["contenu"]) && (trim($_POST["contenu"]) != "")) {
-            global $membreCo;
-            Commentaire::create($mysql, time(), trim($_POST["contenu"]), $membreCo, $article);
-        }
 
         if ($membre->getFacebook()) {
             $facebook = $membre->getFacebook();
@@ -752,9 +655,7 @@ function showDetailArticle()
         if ($membre->getSite()) {
             $site = $membre->getSite();
         }
-        
-        $pageTitle = " - ".$article->getTitre();
-        
+
         $cat = $article->getCategorie();
         $titre = $article->getTitre();
         $annee = $article->getAnnee();
@@ -772,46 +673,19 @@ function showDetailArticle()
         $categorie = utf8_encode($cat->getNom());
         $tag = $cat->getTag();
         $membreId = $membre->getIdMembre();
-        $nbCom = count($article->selectCommentaires());
         $date = returnFrenchDate(date("Y-m-d H:i",$article->getDate()));
         $contenu = $article->getContenu();
         $id = $article->getIdArticle();
-        $coms = $article->selectCommentaires();
-        $commentaires = "";
-
-        if (count($coms)) {
-            foreach ($coms as $com) {
-                $c_membre = $com->getMembre();
-                $c_avatar =  md5(strtolower(trim($c_membre->getImage())));
-                $c_pseudo = $c_membre->getPseudo();
-                $c_membreId = $c_membre ->getIdMembre();
-                $c_date = returnFrenchDate(date("Y-m-d H:i",$com->getDate()));
-                $c_contenu = $com->getContenu();
-                $c_id = $com->getIdCommentaire();
-
-                ob_start();
-                include 'view/article_commentaire.php';
-                $commentaires .= ob_get_clean();
-            }
-        } else {
-            $commentaires = "Aucun commentaire";
-        }
 
         ob_start();
         include 'view/article_detail.php';
         $article_detail = ob_get_clean();
-
-        ob_start();
-        include 'view/page_title.php';
-        $page_title = ob_get_clean();
     } else {
         $host = $_SERVER['HTTP_HOST'];
         $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
         header ("Location:http://$host$uri/404");
     }
-
-    $widget_recent = getRecent();
-
+    
     ob_start();
     include 'view/widget_social.php';
     $widget_social = ob_get_clean();
@@ -876,12 +750,6 @@ function showListeArticle()
 
     $nb_page = ceil($total / 5);
     
-    $categorie = isset($cat) ? $cat : "";
-    $titre = "LanceA News";
-    ob_start();
-    include 'view/page_title.php';
-    $page_title = ob_get_clean();
-
     $content = "<div id='articles'>";
 
     $content .= getFiltres("l", $_GET["c"]);
@@ -903,7 +771,6 @@ function showListeArticle()
             $categorie = utf8_encode($cat->getNom());
             $tag = $cat->getTag();
             $membreId = $membre->getIdMembre();
-            $nbCom = count($article->selectCommentaires());
             $date = returnFrenchDate(date("Y-m-d H:i",$article->getDate()));
             $contenu = texte_resume_brut($article->getContenu(), 250);
 
@@ -930,8 +797,6 @@ function showListeArticle()
     } else {
         $content = "Il n'y a aucun articles dans cette catégorie";
     }
-    
-    $widget_recent = getRecent();
 
     ob_start();
     include 'view/widget_social.php';
@@ -939,7 +804,7 @@ function showListeArticle()
     
     ob_start();
     include 'view/widget_partenaires.php';
-    $widget_pub = ob_get_clean();
+    $widget_partenaires = ob_get_clean();
 
     include 'layout.php';
 }
@@ -975,12 +840,6 @@ function showSearchArticle()
     $articles = Article::getBySearch($mysql, $_GET["s"], $_GET["y"], $_GET["m"], $_GET["j"], $_GET["p"], 5, $total);
     $nb_page = ceil($total / 5);
 
-    $categorie = "Recherche";
-    $titre = "LanceA News";
-    ob_start();
-    include 'view/page_title.php';
-    $page_title = ob_get_clean();
-
     if ($total <= 0) {
         $content = "<div id='articles'>Aucun resultat ne correspond à votre recherche.</div>";
     } else {
@@ -1004,7 +863,6 @@ function showSearchArticle()
             $categorie = utf8_encode($cat->getNom());
             $tag = $cat->getTag();
             $membreId = $membre->getIdMembre();
-            $nbCom = count($article->selectCommentaires());
             $date = returnFrenchDate(date("Y-m-d H:i",$article->getDate()));
             $contenu = texte_resume_brut($article->getContenu(), 250);
 
@@ -1030,15 +888,13 @@ function showSearchArticle()
         }
     }
 
-    $widget_recent = getRecent();
-
     ob_start();
     include 'view/widget_social.php';
     $widget_social = ob_get_clean();
 
     ob_start();
     include 'view/widget_partenaires.php';
-    $widget_pub = ob_get_clean();
+    $widget_partenaires = ob_get_clean();
 
     include 'layout.php';
 }
@@ -1093,7 +949,7 @@ function showPassword()
     include 'layout.php';
 }
 
-function showInscriptionMembre()
+function showInscriptionArtiste()
 {
     $mysql = openConnexion();
     $erreur = "";
@@ -1110,14 +966,14 @@ function showInscriptionMembre()
             if ($_POST["mdp"] == $_POST["mdp2"]) {
                 $salt = random(5);
                 $mdp = md5(md5($salt).md5($_POST["mdp"]));
-                $groupe = Groupe::load($mysql, 1);
+                $groupe = Groupe::load($mysql, 2);
                 $membre = Membre::create($mysql,$_POST["login"],$mdp,0,'','','','','','',$salt,$_POST["mail"],random(20),"",$groupe,0);
                 $content = "<div class='alert alert-success' id='succes'><strong>Bienvenue</strong> Rendez-vous dans votre boite mail afin de valider votre inscription!</div>";
 
                 $host = $_SERVER['HTTP_HOST'];
                 $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
 
-                $url = "http://$host$uri/membre/validation/".$membre->getIdMembre()."/".$membre->getActivation();
+                $url = "http://$host$uri/artiste/validation/".$membre->getIdMembre()."/".$membre->getActivation();
 
                 ob_start();
                 include 'view/mail_inscription.php';
@@ -1156,11 +1012,11 @@ function showInscriptionMembre()
     include 'layout.php';
 }
 
-function showValidationMembre()
+function showValidationArtiste()
 {
     $mysql = openConnexion();
 
-    $pageTitle = "";
+    $pageTitle = " - Validation du compte";
     
     $menu = getMenu();
     $top = getTop(); 
@@ -1181,11 +1037,11 @@ function showValidationMembre()
     include 'layout.php';
 }
 
-function showDeconnexionMembre()
+function showDeconnexionArtiste()
 {
     $mysql = openConnexion();
 
-    $pageTitle = "";
+    $pageTitle = "Déconexion";
     
     $menu = getMenu();
     $top = getTop(); 
@@ -1198,8 +1054,6 @@ function showDeconnexionMembre()
     $host = $_SERVER['HTTP_HOST'];
     $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
     header ("Refresh: 3;URL=http://$host$uri/");
-    
-    $widget_recent = getRecent();
 
     ob_start();
     include 'view/widget_social.php';
@@ -1213,140 +1067,7 @@ function showDeconnexionMembre()
     include 'layout.php';
 }
 
-function showProfilMembre()
-{
-    $mysql = openConnexion();
-  
-    $menu = getMenu();
-    $top = getTop(); 
-
-    $page = 1;
-
-    $m = membre::selectByPseudo($mysql, $_GET["n"]);
-    $membre = $m[0];
-    $membreId = $membre->getIdMembre();
-    
-    if ($_GET["p"] == "") {
-        $_GET["p"] = "1";
-    } 
-   
-    if ($_GET["y"] == "") {
-        $_GET["y"] = "all";
-    } 
-    
-    if ($_GET["m"] == "") {
-        $_GET["m"] = "all";
-    } 
-    
-    if ($_GET["j"] == "") {
-        $_GET["j"] = "all";
-    }
-
-    $articles = array();
-    $total = Article::countByAuteur($mysql, $membreId, $_GET["y"], $_GET["m"], $_GET["j"]);
-    $articles = Article::getByAuteur($mysql, $membreId, $_GET["y"], $_GET["m"], $_GET["j"], $_GET["p"], 12, $total);
-    $nb_page = ceil($total / 12);
-    
-    $filtres = getFiltres("p", $_GET["n"]);
-
-    $articles_related = "";
-    
-    if ($total <= 0) {
-        $content = "Cet auteur n'a encore publié aucun article.";
-    } else {
-        $i = 1;
-        $articles_related .= "<div class='row'>";
-        
-        foreach ($articles as $article) {
-            if ($i >= 5) {
-                $articles_related .= "</div><br />";
-                
-                $articles_related .= "<div class='row'>";
-                $i = 1;
-            }
-            
-            $titre = $article->getTitre();
-            $id = $article->getIdArticle();
-            $annee = $article->getAnnee();
-            $mois = $article->getMois();
-            $jour = $article->getJour();
-            $permalien = $article->getPermalien();
-            $image = $article->getImage();
-            $nbCom = count($article->selectCommentaires());
-            $date = date("d/m/Y H:i",$article->getDate());
-            
-            ob_start();
-            include 'view/articles_related.php';
-            $articles_related .= ob_get_clean();
-            
-            $i++;
-        }
-
-        $articles_related .= "</div><br />";
-
-        if ($nb_page > 1) {
-            $articles_related .= "<div id='paginationBox'><ul class='pagination'>";
-            $url = "profil/".$_GET["n"]."/".($_GET["y"] != "all" ? $_GET["y"]."/" : "").($_GET["m"] != "all" ? $_GET["m"]."/" : "").($_GET["j"] != "all" ? $_GET["j"]."/" : "");
-            $articles_related .= "<li><a href='".$url."' title='prev'><i class='fa fa-angle-double-left'></i></a></li>";
-            $articles_related .= "<li class='divider'></li>";
-            for ($i = 1; $i <= $nb_page; $i++) {  
-                $active = (((isset($_GET["p"])) && ($i == $_GET["p"])) || (($i == 1) && (!isset($_GET["p"])))) ? "class='active'" : "" ;
-                $articles_related .= "<li ".$active."><a href='".$url.$i."§'>".$i."</a></li>";
-            }
-            $articles_related .= "<li class='divider'></li>";
-            $articles_related .= "<li><a href='".$url.$nb_page."§' title='next'><i class='fa fa-angle-double-right'></i></a></li>";
-            $articles_related .= "</ul></div>";
-        }
-    }
-      
-    $pageTitle = " - ".$membre->getPseudo();
-    
-    $pseudo = $membre->getPseudo();
-    $titre = $membre->getTitre();
-    $desc = $membre->getDescr();
-    $avatar = md5(strtolower(trim($membre->getImage())));
-    
-    if ($membre->getFacebook()) {
-        $facebook = $membre->getFacebook();
-    }
-    if ($membre->getTwitter()) {
-        $twitter = $membre->getTwitter();
-    }
-    if ($membre->getGoogle()) {
-        $google = $membre->getGoogle();
-    }
-    if ($membre->getSite()) {
-        $site = $membre->getSite();
-    }    
-
-    $isAdmin = false;
-    if ($membre->getGroupeId() == 3) {
-        $isAdmin = true;
-    }
-    
-    $isAuteur = false;
-    if ($membre->getGroupeId() == 2) {
-        $isAuteur = true;
-    }
-    
-    ob_start();
-    include 'view/profil.php';
-    $content = ob_get_clean();
-
-    $widget_recent = getRecent();
-
-    ob_start();
-    include 'view/widget_social.php';
-    $widget_social = ob_get_clean();
-    
-    ob_start();
-    include 'view/widget_partenaires.php';
-    $widget_pub = ob_get_clean();
-
-    include 'layout.php';
-}
-
-function showModMembre()
+function showModArtiste()
 {
     $mysql = openConnexion();
 
@@ -1405,192 +1126,13 @@ function showModMembre()
     include 'view/membre_form.php';
     $content = ob_get_clean();
 
-    $widget_recent = getRecent();
-
     ob_start();
     include 'view/widget_social.php';
     $widget_social = ob_get_clean();
     
     ob_start();
     include 'view/widget_partenaires.php';
-    $widget_pub = ob_get_clean();
+    $widget_partenaires = ob_get_clean();
 
     include 'layout.php';
 }
-
-function getRecent()
-{
-    $mysql = openConnexion();
-
-    $a_pop = Article::getPopularArticles($mysql);
-    $c_rec = Commentaire::getRecentCommentaires($mysql);
-
-    $articles_pop = "";
-    $articles_rec = "";
-    $com_rec = "";
-
-    foreach ($a_pop as $article) {
-        $cat = $article->getCategorie();
-        $date = date("d/m/Y H:i",$article->getDate());
-        $articles_pop .= "<article class='article-tiny'>";
-        $articles_pop .= "<a href='".$article->getAnnee()."/".$article->getMois()."/".$article->getJour()."/".$article->getPermalien()."' class='image'>";
-        $articles_pop .= "<img src='img/articles/".$article->getImage()."' alt='".$article->getTitre()."'>";
-        $articles_pop .= "<div class='image-light'></div>";
-        $articles_pop .= "<div class='link'>";
-        $articles_pop .= "<span class='dashicons dashicons-format-gallery'></span>";
-        $articles_pop .= "</div>";
-        $articles_pop .= "</a>";
-        $articles_pop .= "<a href='".$article->getAnnee()."/".$article->getMois()."/".$article->getJour()."/".$article->getPermalien()."'><h5>".$article->getTitre()."</h5></a>";
-        $articles_pop .= "<p class='post-meta'>";
-        $articles_pop .= "<small>".$date."</small> &nbsp;";
-        $articles_pop .= "<a href='article/liste/1/".$cat->getTag()."'><span class='fa fa-folder'></span> ".utf8_encode($cat->getNom())."</a>";
-        $articles_pop .= "</p>";
-        $articles_pop .= "<hr>";
-        $articles_pop .= "</article>";
-    }
-
-    foreach ($c_rec as $commentaire) {
-        $membre = $commentaire->getMembre();
-        $article = Article::load($mysql, $commentaire->getArticleId());
-        $date = date("d/m/Y H:i",$article->getDate());
-        $com_rec .= "<li>";
-        $com_rec .= "<div class='avatar'>";
-        $com_rec .= "<a href='".$article->getAnnee()."/".$article->getMois()."/".$article->getJour()."/".$article->getPermalien()."#com".$commentaire->getIdCommentaire()."' class='light'>";
-        $com_rec .= "<img src='http://www.gravatar.com/avatar/".md5(strtolower(trim($membre->getImage())))."?s=120&d=mm' alt='".$membre->getPseudo()."'>";
-        $com_rec .= "<div class='layer'></div>";
-        $com_rec .= "</a>";
-        $com_rec .= "</div>";
-        $com_rec .= "<div class='content'>";
-        $com_rec .= "<div class='comment-content'>";
-        $com_rec .= "<a href='".$article->getAnnee()."/".$article->getMois()."/".$article->getJour()."/".$article->getPermalien()."#com".$commentaire->getIdCommentaire()."'>".texte_resume_brut($commentaire->getContenu(),150)."</a>";
-        $com_rec .= "</div>";
-        $com_rec .= "<div class='comment-meta'>";
-        $com_rec .= "<a href='profil/".$membre->getPseudo()."'><i class='fa fa-user'></i> ".$membre->getPseudo()."</a>&nbsp;";
-        $com_rec .= "<small>".$date."</small> &nbsp;";
-        $com_rec .= "</div>";
-        $com_rec .= "</div>";
-        $com_rec .= "</li>";
-    }
-
-    ob_start();
-    include 'view/widget_recent.php';
-    $res = ob_get_clean();
-    return $res;
-}
-
-
-
-function showProposerArticle()
-{
-    $mysql = openConnexion();
-
-    $erreur = "";
-
-    $pageTitle = " - Proposer un article";
-    
-    if (isset($_POST["titre"])) {
-
-        $ok = false;
-        $name = "";
-
-        if (isset($_FILES["image"]) && $_FILES["image"]['tmp_name'] != "") {
-            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
-            $extension_upload = strtolower(  substr(  strrchr($_FILES['image']['name'], '.')  ,1)  );
-            $image_sizes = getimagesize($_FILES['image']['tmp_name']);
-
-            if ($image_sizes[0] < 700 || $image_sizes[1] < 400) {
-                $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> L'image est trop petite! 700x400 minimum!</div>";
-            } else if ( ! in_array($extension_upload,$extensions_valides) ) {
-                $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> L'extension de votre image n'est pas bonne!</div>";
-            } else {
-                $taille_maxi = 512000;
-                $taille = filesize($_FILES['image']['tmp_name']);
-                if ($taille > $taille_maxi) {
-                    $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> La taille de votre fichier est supérieur à 512 Ko!</div>";
-                } else {
-                    $name = to_permalink($_POST["titre"])."-".random(10).strrchr($_FILES['image']['name'], '.');
-                    $nom = "img/articles/$name";
-                    $resultat = move_uploaded_file($_FILES['image']['tmp_name'],$nom);
-                    if ($resultat) {
-                        $ok = true;
-                    } else {
-                        $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> Erreur lors de l'envoie du fichier!</div>";
-                    }
-                }
-            }
-        } else {
-            $ok = true;
-        }
-
-        if (isset($_FILES["image"]) && ($_FILES["image"]['tmp_name'] != "") && $ok) {
-            $image = $name;
-        } else {
-            $image = "";
-        }
-
-        if ($ok) {
-            $membre = Membre::load($mysql, 1);
-            $categorie = Categorie::load($mysql, $_POST["categorie"]);
-            $permalien = to_permalink($_POST["titre"]);
-            $contenu = $_POST["contenu"]."<br /><br /> <em>Merci à ".$_POST["auteur"]." pour la proposition de News!</em>";
-            $article = Article::create($mysql, $_POST["titre"], time(), date("Y",time()), date("m",time()), date("d",time()), date("H:i",time()), $contenu, $image, 0, $permalien, '', '', $membre, $categorie, 0, 0, 0);
-
-            $mail = new Email();
-            $mail->setFrom("LanceA News");
-            $staffs = Membre::selectStaff($mysql);
-            foreach ($staffs as $staff) {
-                $mail->addTo($staff->getMail());
-            }
-            $mail->setSubject("LanceA News :  Un article a été proposé");
-            $message = "Titre : ".$_POST["titre"]."<br /><br />";
-            $message = "Auteur : ".$_POST["auteur"]."<br /><br />";
-            $message .= "Image : <img src='http://news.lancea-online.com/img/articles/".$image."' alt='Titre'/><br /><br />";
-            $message .= "Contenu : ".$contenu;
-            $mail->setMessage($message);
-            $mail->sendMail();
-            
-            $host = $_SERVER['HTTP_HOST'];
-            $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-            
-            $erreur .= "<div class='alert alert-success'><strong>Merci</strong> Votre article a bien été soumit! Il sera publié après relecture de notre équipe.</div>";
-            
-            header ("Refresh: 3;URL=http://$host$uri/");
-        }
-    } 
-    
-    $menu = getMenu();
-    $top = getTop(); 
-
-    $titre = (isset($_POST["titre"]) ? $_POST["titre"] : "");
-    $idArticle = "";
-    $date = (isset($_POST["date"]) ? $_POST["date"] : "");
-    $auteur = (isset($_POST["auteur"]) ? $_POST["auteur"] : "");
-    $heure = (isset($_POST["heure"]) ? $_POST["heure"] : "");
-
-    $contenu = (isset($_POST["contenu"]) ? $_POST["contenu"] : "Contenu de votre article");
-
-    $categories = Categorie::loadAll($mysql);
-    $categorie = "<option value=''>Aucune</option>";
-    foreach ($categories as $cat) {
-        $selected = ((isset($_POST["categorie"]) && ($cat->getIdCategorie() == $_POST["categorie"])) ? "selected" : "");
-        $categorie .= "<option value='".$cat->getIdCategorie()."' ".$selected.">".utf8_encode($cat->getNom())."</option>";
-    }
-
-    ob_start();
-    include 'view/article_proposer_form.php';
-    $content = ob_get_clean();
-    
-    $widget_recent = getRecent();
-
-    ob_start();
-    include 'view/widget_social.php';
-    $widget_social = ob_get_clean();
-
-    ob_start();
-    include 'view/widget_partenaires.php';
-    $widget_pub = ob_get_clean();
-
-    include 'layout.php';
-}
-
-?>

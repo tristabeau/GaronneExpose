@@ -4,11 +4,11 @@
     <form name="formPassword" id="formPassword" method="post" action="">
         <table class="table table-responsive">
             <tr>
-                <td><label for="mail">Adresse e-mail de votre compte LanceA News</label></td>
+                <td><label for="mail">Adresse e-mail de votre compte</label></td>
                 <td>
                     <div class="input-group">
                         <i class="fa fa-envelope"></i>
-                        <input name="mail"  id="mail" type="email" value="" placeholder="Adresse e-mail de votre compte LanceA News" required />
+                        <input name="mail"  id="mail" type="email" value="" placeholder="Adresse e-mail de votre compte" required />
                     </div>
                 </td>
             </tr>   

@@ -247,10 +247,12 @@ abstract class Base_Groupe
     {
         // Supprimer les membres associé(e)s
         $select = $this->selectMembres();
-        while ($membre = Membre::fetch($this->_pdo,$select)) {
-            $membre->delete();
+        if (count($select)) {
+            while ($membre = Membre::fetch($this->_pdo,$select)) {
+                $membre->delete();
+            }
         }
-        
+
         // Supprimer le/la groupe
         $pdoStatement = $this->_pdo->prepare('DELETE FROM '.Groupe::TABLENAME.' WHERE '.Groupe::FIELDNAME_IDGROUPE.' = ?');
         if (!$pdoStatement->execute(array($this->getIdGroupe()))) {

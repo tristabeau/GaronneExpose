@@ -318,7 +318,7 @@ abstract class Base_Article
         
         // Construire le/la article
         return $lazyload && isset(self::$_lazyload[intval($idArticle)]) ? self::$_lazyload[intval($idArticle)] :
-               new Article($pdo,intval($idArticle),$titre,$date,intval($annee),intval($mois),intval($jour),$heure,$contenu,$image,intval($nb_vues),$permalien,$rapport,$correcteur,$membre,$categorie,$vedette ? true : false,$publie ? true : false,$corrige ? true : false,$lazyload);
+               new Article($pdo,intval($idArticle),$titre,$date,$annee,$mois,$jour,$heure,$contenu,$image,intval($nb_vues),$permalien,$rapport,$correcteur,$membre,$categorie,$vedette ? true : false,$publie ? true : false,$corrige ? true : false,$lazyload);
     }
     
     /**
@@ -373,12 +373,6 @@ abstract class Base_Article
      */
     public function delete()
     {
-        // Supprimer les commentaires associé(e)s
-        $select = $this->selectCommentaires();
-        while ($commentaire = Commentaire::fetch($this->_pdo,$select)) {
-            $commentaire->delete();
-        }
-        
         // Supprimer le/la article
         $pdoStatement = $this->_pdo->prepare('DELETE FROM '.Article::TABLENAME.' WHERE '.Article::FIELDNAME_IDARTICLE.' = ?');
         if (!$pdoStatement->execute(array($this->getIdArticle()))) {
@@ -923,16 +917,7 @@ abstract class Base_Article
         }
         return $pdoStatement;
     }
-    
-    /**
-     * Sélectionner les commentaires
-     * @return PDOStatement 
-     */
-    public function selectCommentaires()
-    {
-        return Commentaire::selectByArticle($this->_pdo,$this);
-    }
-    
+
     /**
      * ToString
      * @return string Représentation de article sous la forme d'un string

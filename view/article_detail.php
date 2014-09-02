@@ -23,12 +23,10 @@
         <div class="icons">
             <a href="profil/<?php echo $pseudo; ?>" title="<?php echo $pseudo; ?>"><img src="http://www.gravatar.com/avatar/<?php echo $avatar; ?>?s=120&d=mm" alt="<?php echo $pseudo; ?>" class="avatar" /></a>
              <a href="javascript:;" onclick="document.location.hash='';" title="<?php echo $nbVue; ?> Vues"><i class="fa fa-eye"></i><span class="comment"><?php echo $nbVue; ?></span></a>
-            <a href="javascript:;" onclick="document.location.hash='commentaire';" title="<?php echo $nbCom; ?> Commentaires"><i class="fa fa-comments"></i><span class="comment"><?php echo $nbCom; ?></span></a>
-        </div>
+       </div>
         <p class="post-meta">
             <small itemprop="datePublished"><?php echo $date; ?></small>
             <a href="profil/<?php echo $pseudo; ?>"><span class="fa fa-user"></span> <?php echo $pseudo; ?></a> &nbsp;
-            <a href="javascript:;" onclick="document.location.hash='commentaire';"><span class="fa fa-comments"></span> <?php echo $nbCom; ?></a> &nbsp;
             <a href="javascript:;" onclick="document.location.hash='';"><span class="fa fa-eye"></span> <?php echo $nbVue; ?></a>
         </p>
     </div>
@@ -96,42 +94,6 @@
     </ul>
 
 </section>
-
-<!-- COMMENTS 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-<section class="widget" id="commentaire">
-
-    <!--Header-->
-    <div class="header clearfix"><h4>Commentaires</h4></div>
-
-    <!--Content-->
-    <ol class="post-comments">
-        <?php echo $commentaires; ?>
-    </ol>
-
-</section>
-
-<!-- COMMENT FORM 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-<section class="widget message-form">
-
-    <!--Header-->
-    <div class="header clearfix"><h4>Ecrire un commentaire</h4></div>
-
-    <!--Content-->
-    <?php if (isset($_SESSION["idMembre"])) { ?>
-    <form method="post" action="">
-        <div class="textarea">
-            <textarea name="contenu" placeholder="Votre commentaire ..." class="input-light" rows="12"  required></textarea>
-        </div>             
-        <button type="submit" class="btn btn-primary">Envoyer</button>
-    </form>
-    <?php } else { ?>
-        Connectez-vous pour ajouter un commentaire.
-    <?php } ?>
-
-</section>
-
 
 <script type="text/javascript">
 

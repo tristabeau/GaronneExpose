@@ -5,7 +5,7 @@
                 
     <ul class="nav navbar-nav">
         <li><a href="profil/<?php echo $pseudo; ?>">Mon Profil</a></li>
-        <li><a href="membre/modification">Modifier mon profil</a></li>
-        <li><a href="membre/deconnexion">Déconnexion</a></li>
+        <li><a href="artiste/modification">Modifier mon profil</a></li>
+        <li><a href="artiste/deconnexion">Déconnexion</a></li>
     </ul>
 </div>

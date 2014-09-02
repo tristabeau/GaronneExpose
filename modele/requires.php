@@ -9,7 +9,4 @@ require('Base_Membre.php');
 require('Membre.php');
 require('Base_Article.php');
 require('Article.php');
-require('Base_Commentaire.php');
-require('Commentaire.php');
-
 require('Email.php');

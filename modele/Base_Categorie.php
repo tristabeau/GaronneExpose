@@ -263,10 +263,12 @@ abstract class Base_Categorie
     {
         // Supprimer les fils associé(e)s
         $select = $this->selectFils();
-        while ($fils = Categorie::fetch($this->_pdo,$select)) {
-            $fils->setPere(null);
+        if (count($select)) {
+            while ($fils = Categorie::fetch($this->_pdo,$select)) {
+                $fils->setPere(null);
+            }
         }
-        
+
         // Supprimer les articles associé(e)s
         $select = $this->selectArticles();
         while ($article = Article::fetch($this->_pdo,$select)) {

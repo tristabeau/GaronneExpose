@@ -55,43 +55,28 @@ function connexion()
 function modMembre(membre)
 {
     $("#idMembre").val(membre);
-    $("#formAction").attr("action", "index.php?v=admin&a=modMembre").submit();
+    $("#formAction").attr("action", "index.php?v=admin&a=modArtiste").submit();
 }
 
 function supMembre(membre)
 {
     if(confirm("Voulez-vous supprimer ce membre ?")) {
         $("#idMembre").val(membre);
-        $("#formAction").attr("action", "index.php?v=admin&a=supMembre").submit();
+        $("#formAction").attr("action", "index.php?v=admin&a=supArtiste").submit();
     }
 }
 
 function modArticle(article)
 {
     $("#idArticle").val(article);
-    $("#formAction").attr("action", "index.php?v=admin&a=modArticle").submit();
+    $("#formAction").attr("action", "index.php?v=admin&a=modContenu").submit();
 }
 
 function supArticle(article)
 {
     if(confirm("Voulez-vous supprimer cet article ?")) {
         $("#idArticle").val(article);
-        $("#formAction").attr("action", "index.php?v=admin&a=supArticle").submit();
-    }
-}
-
-function supCom(com, annee, mois, jour, permalien)
-{
-    if(confirm("Voulez-vous supprimer ce commentaire ?")) {
-        $.ajax({
-            type: "POST",
-            url:  'ajax/supCom.php',
-            async: false,
-            data: "id="+com,
-            success: function(result){
-               document.location.href=annee+"/"+mois+"/"+jour+"/"+permalien;
-            }
-        });
+        $("#formAction").attr("action", "index.php?v=admin&a=supContenu").submit();
     }
 }
 

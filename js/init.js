@@ -14,9 +14,7 @@ $(function() {
             $(this).parent().first().addClass('current_page_item');
         }
     });  
-    
-    $(".rslides").responsiveSlides();
-    
+
     $('.datepicker').appendDtpicker({
 		"locale": "fr",
         'minuteInterval' : 15,
@@ -51,16 +49,7 @@ $(function() {
             });
 		},
     });
-    
-    $("#carousel").owlCarousel({
-        items : 5
-    });    
-    
-    $('.linkRoster').on('click', function(event){
-        $("#selectJeu").val($(this).attr("id"));
-        $('#formSelectJeu').submit();        
-    });
-    
+
     var kal = $('.kalendar').kalendar({ 
         events: [],
         monthHuman: [["JAN","Janvier"],["FEV","Février"],["MAR","Mars"],["Avr","Avril"],["MAI","Mai"],["JUIN","Juin"],["JUIL","Juillet"],["AOU","Août"],["SEP","Septembre"],["OCT","Octobre"],["NOV","Novembre"],["DEC","Décembre"]],
@@ -80,51 +69,5 @@ $(function() {
 			}
 		}
 	});
-    
-    $( "#ex" ).autocomplete({
-      minLength: 2,
-      source: function( request, response ) {
-        var term = request.term;
-        if ( term in cache ) {
-          response( cache[ encodeURIComponent(term.label) ] );
-          return;
-        }
- 
-        $.getJSON( "ajax/getMembre.php", request, function( data, status, xhr ) {
-          cache[ term ] = data;
-          response( data );
-        });
-      },
-      select: function( event, ui ) {
-        $("#selectMembreId").val(ui.item.value);
-        $("#selectMembre").val(ui.item.label);
-      }
-    });
-    
-    $("#selectMembre").autocomplete({
-        minLength: 2,
-        source: function(req, add){
-          $.ajax({
-                url:'ajax/getMembre.php',
-                type:"post",
-                dataType: 'json',
-                data: 'name='+req.term,
-                async: true,
-                cache: true,
-                success: function(data){
-                    var suggestions = [];  
-                    //process response  
-                    $.each(data, function(i, val){  
-                        suggestions.push({"id": val.id, "value": val.value});  
-                    });  
-                    //pass array to callback  
-                    add(suggestions); 
-                }
-            });
-       },
-       select: function( event, ui ) {
-            $("#selectMembreId").val(ui.item.id);
-      }
-    });
    
 });

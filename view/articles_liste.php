@@ -4,7 +4,7 @@
             <input type="hidden" name="idArticle" id="idArticle" value="" />
         </form>
         
-        <button class="btn btn-primary" id="barticle" form="formAction" formaction="index.php?v=admin&a=newArticle">Créer un article</button>
+        <button class="btn btn-primary" id="barticle" form="formAction" formaction="index.php?v=admin&a=newContenu">Créer un contenu</button>
         
         <div id='search'>
             <label for='filter' id='filterSearch' >Recherche : </label>

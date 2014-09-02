@@ -22,66 +22,6 @@ class Article extends Base_Article
         return self::fetchAll($pdo,$pdoStatement);
     }   
     
-    /**
-     * Charger les 10 articles aléatoirement
-     * @return articles 
-     */
-    public static function getRandArticles(PDO $pdo)
-    {
-        $pdoStatement = self::_select($pdo, Article::FIELDNAME_PUBLIE.' = 1 AND '.Article::FIELDNAME_DATE." <= UNIX_TIMESTAMP() " , array("Rand()"), 10);
-
-        if (!$pdoStatement->execute()) {
-            throw new Exception('Erreur lors du chargement des derniers articles depuis la base de données');
-        }
-        
-        return self::fetchAll($pdo,$pdoStatement);
-    }  
-    
-    /**
-     * Charger les 3 derniers articles en vedette
-     * @return articles 
-     */
-    public static function getLastvedetteArticles(PDO $pdo)
-    {
-        $pdoStatement = self::_select($pdo, Article::FIELDNAME_PUBLIE.' = 1 AND '.Article::FIELDNAME_VEDETTE.' = 1 AND '.Article::FIELDNAME_DATE." <= UNIX_TIMESTAMP() ", array(Article::FIELDNAME_DATE.' DESC'), 3);
-
-        if (!$pdoStatement->execute()) {
-            throw new Exception('Erreur lors du chargement des derniers articles depuis la base de données');
-        }
-        
-        return self::fetchAll($pdo,$pdoStatement);
-    }
-    
-    /**
-     * Charger les 4 derniers articles les plus lus
-     * @return articles 
-     */
-    public static function getPopularArticles(PDO $pdo)
-    {
-        $pdoStatement = self::_select($pdo, Article::FIELDNAME_PUBLIE.' = 1 AND '.Article::FIELDNAME_DATE." <= UNIX_TIMESTAMP() ", array(Article::FIELDNAME_NB_VUES.' DESC'), 4);
-
-        if (!$pdoStatement->execute()) {
-            throw new Exception('Erreur lors du chargement des derniers articles depuis la base de données');
-        }
-        
-        return self::fetchAll($pdo,$pdoStatement);
-    }    
-    
-    /**
-     * Charger les 4 derniers articles
-     * @return articles 
-     */
-    public static function getRecentArticles(PDO $pdo)
-    {
-        $pdoStatement = self::_select($pdo, Article::FIELDNAME_PUBLIE.' = 1 AND '.Article::FIELDNAME_DATE." <= UNIX_TIMESTAMP() ", array(Article::FIELDNAME_DATE.' DESC'), 4);
-
-        if (!$pdoStatement->execute()) {
-            throw new Exception('Erreur lors du chargement des derniers articles depuis la base de données');
-        }
-        
-        return self::fetchAll($pdo,$pdoStatement);
-    }  
-    
         /**
      * compter par categorie
      * @return articles 
@@ -247,13 +187,12 @@ class Article extends Base_Article
      */
     public static function selectDetail(PDO $pdo, $annee, $mois, $jour, $permalien)
     {
-       
-
         $pdoStatement = self::_select($pdo, Article::FIELDNAME_ANNEE.' = ? AND '.Article::FIELDNAME_MOIS.' = ? AND '.Article::FIELDNAME_JOUR.' = ?  AND '.Article::FIELDNAME_PERMALIEN.' = ? ');
+
         if (!$pdoStatement->execute(array($annee, $mois, $jour, $permalien))) {
             throw new Exception('Erreur lors du chargement de l article depuis la base de données');
         }
-        
+
         return self::fetchAll($pdo,$pdoStatement);
     }
         

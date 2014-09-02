@@ -4,7 +4,7 @@
             <input type="hidden" name="idMembre" id="idMembre" value="" />
         </form>       
     
-        <button class="btn btn-primary" id="bmembre" form="formAction" formaction="index.php?v=admin&a=newMembre">Créer un membre</button>
+        <button class="btn btn-primary" id="bmembre" form="formAction" formaction="index.php?v=admin&a=newArtiste">Créer un artiste</button>
         
         <div id='search'>
             <label for='filter' id='filterSearch' >Recherche : </label>

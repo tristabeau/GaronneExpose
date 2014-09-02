@@ -3,8 +3,8 @@ function showAdminCategorie()
 {
     $mysql = openConnexion();
 
-    $pageTitle = "";
-    
+    $pageTitle = " - Gestion des catégories";
+
     $menu = getMenu();
     $top = getTop(); 
 
@@ -26,7 +26,9 @@ function showAdminCategorie()
         $table .= "<td>";
         $table .= "<button class='btn btn-primary btn-xs' onclick='modCat(\"".$categorie->getIdCategorie()."\")'>Modifier</button>";
         $table .= " ";
-        $table .= "<button class='btn btn-primary btn-xs' onclick='supCat(\"".$categorie->getIdCategorie()."\")'>Supprimer</button>";
+        if ($categorie->getIdCategorie() > 3 ) {
+            $table .= "<button class='btn btn-primary btn-xs' onclick='supCat(\"".$categorie->getIdCategorie()."\")'>Supprimer</button>";
+        }
         $table .= "</td>";
         $table .= "</tr>";
     }
@@ -43,15 +45,13 @@ function showAdminCategorie()
     include 'view/categories_liste.php';
     $content = ob_get_clean();
 
-    $widget_recent = getRecent();
-
     ob_start();
     include 'view/widget_social.php';
     $widget_social = ob_get_clean();
     
     ob_start();
     include 'view/widget_partenaires.php';
-    $widget_pub = ob_get_clean();
+    $widget_partenaires = ob_get_clean();
 
     include 'layout.php';
 }
@@ -60,12 +60,12 @@ function showAdminModCat()
 {
     $mysql = openConnexion();
 
-        $pageTitle = "";
-    
+    $pageTitle = " - Modification de la catégorie";
+
     if (isset($_POST["nom"])) {
         $categorie = Categorie::load($mysql, $_POST["idCategorie"]);
         $categorie->setNom($_POST["nom"],false);
-        $categorie->setTag($_POST["tag"],false);
+        $categorie->setTag(strtoupper(substr($_POST["nom"],0,5)),false);
         $categorie->setPereById($_POST["parent"],false);
         $categorie->update();
 
@@ -79,7 +79,6 @@ function showAdminModCat()
         $categorie = Categorie::load($mysql, $_POST['idCategorie']);
         $nom = utf8_encode($categorie->getNom());
         $idCategorie = $_POST['idCategorie'];
-        $tag = $categorie->getTag();
         $action = "Modifier";
 
         $categories = Categorie::loadAll($mysql);
@@ -93,15 +92,13 @@ function showAdminModCat()
         include 'view/categorie_form.php';
         $content = ob_get_clean();
 
-        $widget_recent = getRecent();
-
         ob_start();
         include 'view/widget_social.php';
         $widget_social = ob_get_clean();
     
         ob_start();
         include 'view/widget_partenaires.php';
-        $widget_pub = ob_get_clean();
+        $widget_partenaires = ob_get_clean();
 
         include 'layout.php';
     }
@@ -111,11 +108,11 @@ function showAdminNewCat()
 {
     $mysql = openConnexion();
 
-        $pageTitle = "";
+    $pageTitle = " - Création d'une catégorie";
     
     if (isset($_POST["nom"])) {
         $parent = $_POST["parent"] ? Categorie::load($mysql, $_POST["parent"]) : null;
-        Categorie::create($mysql, $_POST["nom"], $_POST["tag"], $parent);
+        Categorie::create($mysql, $_POST["nom"], strtoupper(substr($_POST["nom"],0,5)), $parent);
 
         $host = $_SERVER['HTTP_HOST'];
         $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
@@ -140,15 +137,13 @@ function showAdminNewCat()
         include 'view/categorie_form.php';
         $content = ob_get_clean();
 
-        $widget_recent = getRecent();
-
         ob_start();
         include 'view/widget_social.php';
         $widget_social = ob_get_clean();
     
         ob_start();
         include 'view/widget_partenaires.php';
-        $widget_pub = ob_get_clean();
+        $widget_partenaires = ob_get_clean();
 
         include 'layout.php';
     }
@@ -167,10 +162,9 @@ function showAdminSupCat()
 
 function showAdminGroupe()
 {
+    $pageTitle = " - Gestion des groupes";
+
     $mysql = openConnexion();
-
-    $pageTitle = "";
-
     if (isset($_POST['nom'])) {
         if (isset($_POST['idGroupe']) && $_POST['idGroupe'] != "") {
             $groupe = Groupe::load($mysql, $_POST['idGroupe']);
@@ -199,7 +193,9 @@ function showAdminGroupe()
         $table .= "<td>";
         $table .= "<button class='btn btn-primary btn-xs' onclick='modGroupe(\"".$groupe->getIdGroupe()."\", \"".utf8_encode($groupe->getNom())."\")'>Modifier</button>";
         $table .= " ";
-        $table .= "<button class='btn btn-primary btn-xs' onclick='supGroupe(\"".$groupe->getIdGroupe()."\")'>Supprimer</button>";
+        if ($groupe->getIdGroupe() > 4 ) {
+            $table .= "<button class='btn btn-primary btn-xs' onclick='supGroupe(\"".$groupe->getIdGroupe()."\")'>Supprimer</button>";
+        }
         $table .= "</td>";
         $table .= "</tr>";
     }
@@ -217,15 +213,13 @@ function showAdminGroupe()
     include 'view/groupes_liste.php';
     $content = ob_get_clean();
 
-    $widget_recent = getRecent();
-
     ob_start();
     include 'view/widget_social.php';
     $widget_social = ob_get_clean();
     
     ob_start();
     include 'view/widget_partenaires.php';
-    $widget_pub = ob_get_clean();
+    $widget_partenaires = ob_get_clean();
 
     include 'layout.php';
 }
@@ -243,9 +237,9 @@ function showAdminSupGroupe()
 
 function showAdminMembre()
 {
-    $mysql = openConnexion();
+    $pageTitle = " - Gestion des artistes";
 
-    $pageTitle = "";
+    $mysql = openConnexion();
     
     $menu = getMenu();
     $top = getTop(); 
@@ -288,15 +282,13 @@ function showAdminMembre()
     include 'view/membre_liste.php';
     $content = ob_get_clean();
 
-    $widget_recent = getRecent();
-
     ob_start();
     include 'view/widget_social.php';
     $widget_social = ob_get_clean();
     
     ob_start();
     include 'view/widget_partenaires.php';
-    $widget_pub = ob_get_clean();
+    $widget_partenaires = ob_get_clean();
     include 'layout.php';
 }
 
@@ -308,14 +300,14 @@ function showAdminSupMembre()
 
     $host  = $_SERVER['HTTP_HOST'];
     $uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-    header("Location: http://$host$uri/index.php?v=admin&a=membre");
+    header("Location: http://$host$uri/index.php?v=admin&a=artistes");
 }
 
 function showAdminModMembre()
 {
     $mysql = openConnexion();
 
-    $pageTitle = "";
+    $pageTitle = " - Modification d'un artiste";
     
     global $admin, $auteur;
     
@@ -334,12 +326,11 @@ function showAdminModMembre()
             $membre->setTwitter($_POST["twitter"],false);
             $membre->setGoogle($_POST["google"],false);
             $membre->setSite($_POST["site"],false);
-            $membre->setTitre($_POST["titre"],false);
             $membre->update();
 
             $host = $_SERVER['HTTP_HOST'];
             $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-            header ("Location:http://$host$uri/index.php?v=admin&a=membre");
+            header ("Location:http://$host$uri/index.php?v=admin&a=artistes");
         } else {
             $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> Les deux mots de passe ne correspondent pas!</div>";
         }
@@ -354,12 +345,10 @@ function showAdminModMembre()
     $optionPseudo = "disabled";
     $mail = $membre->getMail();
     $desc = $membre->getDescr();
-    $avatar = $membre->getImage();
     $facebook = $membre->getFacebook();
-    $urlRetour = "index.php?v=admin&a=membre";
+    $urlRetour = "index.php?v=admin&a=artistes";
     $twitter = $membre->getTwitter();
     $google = $membre->getGoogle();
-    $titre = $membre->getTitre();
     $mdpReq = "";
     $site = $membre->getSite();
     $action = "Modifier";
@@ -368,15 +357,13 @@ function showAdminModMembre()
     include 'view/membre_form.php';
     $content = ob_get_clean();
 
-    $widget_recent = getRecent();
-
     ob_start();
     include 'view/widget_social.php';
     $widget_social = ob_get_clean();
     
     ob_start();
     include 'view/widget_partenaires.php';
-    $widget_pub = ob_get_clean();
+    $widget_partenaires = ob_get_clean();
 
     include 'layout.php';
 }
@@ -385,9 +372,7 @@ function showAdminNewMembre()
 {
     $mysql = openConnexion();
 
-    $pageTitle = "";
-    
-    global $admin, $auteur;
+    $pageTitle = " - Création d'un artiste";
     
     $erreur = "";
 
@@ -395,12 +380,12 @@ function showAdminNewMembre()
         if ($_POST["mdp"] == $_POST["mdp2"])  {
             $salt = random(5);
             $mdp = md5(md5($salt).md5($_POST["mdp"]));
-            $groupe = Groupe::load($mysql, 1);
-            Membre::create($mysql,$_POST["pseudo"],$mdp,0,$_POST["desc"],$_POST["facebook"],$_POST["twitter"],$_POST["google"],$_POST["site"],$_POST["avatar"],$salt,$_POST["mail"],"",$_POST["titre"],$groupe,1);
+            $groupe = Groupe::load($mysql, 4);
+            Membre::create($mysql,$_POST["pseudo"],$mdp,0,$_POST["desc"],$_POST["facebook"],$_POST["twitter"],$_POST["google"],$_POST["site"],"",$salt,$_POST["mail"],"","",$groupe,1);
 
             $host = $_SERVER['HTTP_HOST'];
             $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-            header ("Location:http://$host$uri/index.php?v=admin&a=membre");
+            header ("Location:http://$host$uri/index.php?v=admin&a=artistes");
         } else {
             $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> Les deux mots de passe ne correspondent pas!</div>";
         }
@@ -414,12 +399,10 @@ function showAdminNewMembre()
     $optionPseudo = "";
     $mail = "";
     $desc = "";
-    $avatar = "";
     $facebook = "";
-    $titre = "";
     $twitter = "";
     $google = "";
-    $urlRetour = "index.php?v=admin&a=membre";
+    $urlRetour = "index.php?v=admin&a=artiste";
     $mdpReq = "required";
     $site = "";
     $action = "Créer";
@@ -428,15 +411,13 @@ function showAdminNewMembre()
     include 'view/membre_form.php';
     $content = ob_get_clean();
 
-    $widget_recent = getRecent();
-
     ob_start();
     include 'view/widget_social.php';
     $widget_social = ob_get_clean();
     
     ob_start();
     include 'view/widget_partenaires.php';
-    $widget_pub = ob_get_clean();
+    $widget_partenaires = ob_get_clean();
 
     include 'layout.php';
 }
@@ -445,10 +426,10 @@ function showAdminArticle()
 {
     $mysql = openConnexion();
 
-    $pageTitle = "";
-    
+    $pageTitle = " - Gestion des contenus";
+
     $menu = getMenu();
-    $top = getTop(); 
+    $top = getTop();
 
     $articles = Article::loadAll($mysql);
     $table = "<table class='footable' data-filter='#filter' data-page-size='20'>";
@@ -456,13 +437,9 @@ function showAdminArticle()
     $table .= "<tr>";
     $table .= "<th data-type='numeric'>Date</th>";
     $table .= "<th>Titre</th>";
-    $table .= "<th data-hide='all'>Catégorie</th>";
+    $table .= "<th>Catégorie</th>";
     $table .= "<th data-hide='phone'>Auteur</th>";
-    $table .= "<th data-hide='phone'>Corrigé</th>";
     $table .= "<th data-hide='phone'>Publié</th>";
-    $table .= "<th data-hide='all'>Vedette</th>";
-    $table .= "<th data-hide='all'>Commentaire</th>";
-    $table .= "<th data-hide='all'>Correcteur</th>";
     $table .= "<th data-sort-ignore='true'>Actions</th>";
     $table .= "</tr>";
     $table .= "</thead>";
@@ -472,14 +449,10 @@ function showAdminArticle()
         $membre = $article->getMembre();
         $table .= "<tr>";
         $table .= "<td data-value='".$article->getDate()."' >".date("d/m/Y H:i", $article->getDate())."</td>";
-        $table .= "<td><a href='".$article->getAnnee()."/".$article->getMois()."/".$article->getJour()."/".$article->getPermalien()."'>".$article->getTitre()."</a></td>";
+        $table .= "<td>".$article->getTitre()."</td>";
         $table .= "<td>".utf8_encode($categorie->getNom())."</td>";
         $table .= "<td>".utf8_encode($membre->getPseudo())."</td>";
-        $table .= "<td>".(($article->getCorrige()) ? "<span class='label label-success'>Oui</span>" : "<span class='label label-danger'>Non</span>")."</td>";
         $table .= "<td>".(($article->getPublie()) ? "<span class='label label-success'>Oui</span>" : "<span class='label label-danger'>Non</span>")."</td>";
-        $table .= "<td>".(($article->getVedette()) ? "<span class='label label-success'>Oui</span>" : "<span class='label label-danger'>Non</span>")."</td>";
-        $table .= "<td>".utf8_encode($article->getRapport())."</td>";
-        $table .= "<td>".utf8_encode($article->getCorrecteur())."</td>";
         $table .= "<td>";
         $table .= "<button class='btn btn-primary btn-xs' onclick='modArticle(\"".$article->getIdArticle()."\")'>Modifier</button>";
         $table .= " ";
@@ -501,15 +474,13 @@ function showAdminArticle()
     include 'view/articles_liste.php';
     $content = ob_get_clean();
 
-    $widget_recent = getRecent();
-
     ob_start();
     include 'view/widget_social.php';
     $widget_social = ob_get_clean();
     
     ob_start();
     include 'view/widget_partenaires.php';
-    $widget_pub = ob_get_clean();
+    $widget_partenaires = ob_get_clean();
 
     include 'layout.php';
 }
@@ -518,7 +489,7 @@ function showAdminNewArticle()
 {
     $mysql = openConnexion();
 
-    $pageTitle = "";
+    $pageTitle = " - Nouveau contenu";
     
     $erreur = "";
 
@@ -575,11 +546,11 @@ function showAdminNewArticle()
             
             global $membreCo;
             
-            $article = Article::create($mysql, $_POST["titre"], $date, str_pad($annee,4,'0',STR_PAD_LEFT), str_pad($mois,2,'0',STR_PAD_LEFT), str_pad($jour,2,'0',STR_PAD_LEFT), date("H:i",$date), $_POST["contenu"], $image, 0, $permalien, $_POST["commentaire"], $membreCo->getPseudo(), $membre, $categorie, $_POST["vedette"], $_POST["publie"], $_POST["corrige"]);
+            $article = Article::create($mysql, $_POST["titre"], $date, str_pad($annee,4,'0',STR_PAD_LEFT), str_pad($mois,2,'0',STR_PAD_LEFT), str_pad($jour,2,'0',STR_PAD_LEFT), date("H:i",$date), $_POST["contenu"], $image, 0, $permalien, "", $membreCo->getPseudo(), $membre, $categorie, "", $_POST["publie"], "");
 
             $host = $_SERVER['HTTP_HOST'];
             $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-            header("Location: http://$host$uri/index.php?v=admin&a=article");
+            header("Location: http://$host$uri/index.php?v=admin&a=contenus");
         }
     } else {
         $menu = getMenu();
@@ -589,26 +560,7 @@ function showAdminNewArticle()
         $idArticle = "";
         $date = (isset($_POST["date"]) ? $_POST["date"] : "");
         $heure = (isset($_POST["heure"]) ? $_POST["heure"] : "");
-        $vedette = (isset($_POST["publie"]) ? $_POST["publie"] : "0");
         $publie = (isset($_POST["vedette"]) ? $_POST["vedette"] : "0");
-        $corrige = (isset($_POST["corrige"]) ? $_POST["corrige"] : "0");
-        $commentaire = (isset($_POST["commentaire"]) ? $_POST["commentaire"] : "Commentaire du correcteur");
-
-        if ($corrige) {
-            $butCorNon = "";
-            $butCorOui = "btn-success";
-        } else {
-            $butCorNon = "btn-danger";
-            $butCorOui = "";
-        }
-        
-        if ($vedette) {
-            $butVedNon = "";
-            $butVedOui = "btn-success";
-        } else {
-            $butVedNon = "btn-danger";
-            $butVedOui = "";
-        }
 
         if ($publie) {
             $butPubNon = "";
@@ -644,15 +596,13 @@ function showAdminNewArticle()
         include 'view/article_form.php';
         $content = ob_get_clean();
 
-        $widget_recent = getRecent();
-
         ob_start();
         include 'view/widget_social.php';
         $widget_social = ob_get_clean();
     
         ob_start();
         include 'view/widget_partenaires.php';
-        $widget_pub = ob_get_clean();
+        $widget_partenaires = ob_get_clean();
 
         include 'layout.php';
     }
@@ -665,7 +615,7 @@ function showAdminModArticle()
     $article = Article::load($mysql, $_POST["idArticle"]);
     $name = "";
 
-    $pageTitle = "";
+    $pageTitle = " - Modification d'un contenu";
     
     if (isset($_POST["titre"])) {
         $ok = false;
@@ -722,20 +672,14 @@ function showAdminModArticle()
         $article->setMembre($membre, false);
         $article->setCategorie($categorie, false);
         $article->setContenu($_POST["contenu"], false);
-        $article->setVedette($_POST["vedette"], false);
         $article->setPublie($_POST["publie"], false);
         $article->setPermalien($permalien, false);
-        $article->setCorrige($_POST["corrige"], false);
-        $article->setRapport($_POST["commentaire"], false);
-        global $membreCo;
-        $article->setCorrecteur($membreCo->getPseudo(), false);
-
         $article->update();
 
         if ($ok) {
             $host = $_SERVER['HTTP_HOST'];
             $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-            header("Location: http://$host$uri/index.php?v=admin&a=article");
+            header("Location: http://$host$uri/index.php?v=admin&a=contenus");
         }
     }
 
@@ -747,26 +691,7 @@ function showAdminModArticle()
     $date = date("d/m/Y", $article->getDate());
     $heure = date("H:i", $article->getDate());
     $contenu = $article->getContenu();
-    $commentaire = ($article->getRapport() != "" ? $article->getRapport() : "Commentaire du correcteur");
-    $vedette = $article->getVedette();
-    $corrige = $article->getCorrige();
     $publie = $article->getPublie();
-
-    if ($corrige) {
-        $butCorNon = "";
-        $butCorOui = "btn-success";
-    } else {
-        $butCorNon = "btn-danger";
-        $butCorOui = "";
-    }
-    
-    if ($vedette) {
-        $butVedNon = "";
-        $butVedOui = "btn-success";
-    } else {
-        $butVedNon = "btn-danger";
-        $butVedOui = "";
-    }
 
     if ($publie) {
         $butPubNon = "";
@@ -805,15 +730,13 @@ function showAdminModArticle()
     include 'view/article_form.php';
     $content = ob_get_clean();
 
-    $widget_recent = getRecent();
-
     ob_start();
     include 'view/widget_social.php';
     $widget_social = ob_get_clean();
     
     ob_start();
     include 'view/widget_partenaires.php';
-    $widget_pub = ob_get_clean();
+    $widget_partenaires = ob_get_clean();
 
     include 'layout.php';
 }
@@ -826,7 +749,7 @@ function showAdminSupArticle()
 
     $host  = $_SERVER['HTTP_HOST'];
     $uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-    header("Location: http://$host$uri/index.php?v=admin&a=article");
+    header("Location: http://$host$uri/index.php?v=admin&a=contenus");
 }
 
 ?>

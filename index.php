@@ -34,6 +34,7 @@ if (isset($_SESSION["idArtiste"])) {
 }
 
 //var_dump($_GET);
+//die();
 
 //Dispatcheur
 if (isset($_GET["v"])) {
@@ -114,26 +115,22 @@ if (isset($_GET["v"])) {
             }
             break;
 
-
-
-
-
         case "admin":
             if ($admin || $artiste) {
                 switch ($_GET["a"]) {
-                    case "article":
+                    case "contenus":
                         showAdminArticle();
                         break;
 
-                    case "newArticle":
+                    case "newContenu":
                         showAdminNewArticle();
                         break;
 
-                    case "modArticle":
+                    case "modContenu":
                         showAdminModArticle();
                         break;
 
-                    case "supArticle":
+                    case "supContenu":
                         showAdminSupArticle();
                         break;
 
@@ -161,7 +158,7 @@ if (isset($_GET["v"])) {
                         }
                         break;
 
-                    case "membre":
+                    case "artistes":
                         if ($admin) {
                             showAdminMembre();
                         } else {
@@ -177,7 +174,7 @@ if (isset($_GET["v"])) {
                         }
                         break;
 
-                    case "supMembre":
+                    case "supArtiste":
                         if ($admin) {
                             showAdminSupMembre();
                         } else {
@@ -185,7 +182,7 @@ if (isset($_GET["v"])) {
                         }
                         break;
 
-                    case "modMembre":
+                    case "modArtiste":
                         if ($admin) {
                             showAdminModMembre();
                         } else {
@@ -193,7 +190,7 @@ if (isset($_GET["v"])) {
                         }
                         break;
 
-                    case "newMembre":
+                    case "newArtiste":
                         if ($admin) {
                             showAdminNewMembre();
                         } else {
@@ -211,9 +208,7 @@ if (isset($_GET["v"])) {
             }
             break;
 
-
-
-        case "article":
+        case "contenu":
             switch ($_GET["a"]) {
                 case "detail":
                     showDetailArticle();
@@ -225,10 +220,6 @@ if (isset($_GET["v"])) {
 
                 case "search":
                     showSearchArticle();
-                    break;
-
-                case "proposer":
-                    showProposerArticle();
                     break;
 
                 default :

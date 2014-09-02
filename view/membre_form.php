@@ -13,17 +13,6 @@
                     <input  name="idMembre" type="hidden" value="<?php echo $idMembre; ?>" />
                 </td>
             </tr>
-            <?php if ($auteur || $admin) { ?>
-            <tr>
-                <td><label for="titre">Titre</label></td>
-                <td>
-                    <div class="input-group">
-                        <i class="fa fa-users"></i>
-                        <input  name="titre" id="titre" type="text" value="<?php echo $titre; ?>" placeholder="Titre" <?php echo $titre; ?> />
-                    </div>
-                </td>
-            </tr>
-            <?php } ?>
             <tr>
                 <td><label for="mail">Adresse e-mail</label></td>
                 <td>
@@ -86,16 +75,7 @@
                         <input name="site"  id="site" type="text" value="<?php echo $site; ?>" placeholder="Adresse du site" />
                     </div>
                 </td>
-            </tr>               
-            <tr>
-                <td><label for="site">Avatar (e-mail <a href="http://fr.gravatar.com" target="_blank">gravatar</a>)</label></td>
-                <td>
-                    <div class="input-group">
-                        <i class="fa fa-camera"></i>
-                        <input name="avatar"  id="avatar" type="email" value="<?php echo $avatar; ?>" placeholder="E-mail de votre compte gravatar" />
-                    </div>
-                </td>
-            </tr> 
+            </tr>
             <tr>
                 <td colspan="2">
                     <textarea class="ckeditor" id="desc" name="desc" ><?php echo $desc; ?></textarea>
