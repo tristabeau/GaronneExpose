@@ -8,14 +8,14 @@ require '../tools/config.php';
 //On inclut le fichier de fonctions
 require '../tools/functions.php';
 
-// connexion avec la base de données
+// connexion avec la base de donnï¿½es
 $mysql = openConnexion();
 
-$mois = Article::selectDistinctMois($mysql, $_POST["annee"]);
+$mois = Article::selectDistinctMois($mysql, $_POST["annee"], intval( $_POST["cat"]));
 $res = "<option value='all'>Tous</option>";
      
 foreach ($mois as $m) {
-    $res .= "<option value='".$m["mois"]."' ".$selected.">".$m["mois"]."</option>";
+    $res .= "<option value='".$m["mois"]."'>".$m["mois"]."</option>";
 }  
 
 print $res;

@@ -125,9 +125,9 @@ function filtrerSearch(search)
     $("#formFiltres").attr("action", url).submit();
 }
 
-function filtrerListe(cat)
+function filtrerListeEvenement()
 {
-    url = "article/liste/"+cat+"/";
+    url = "evenements/";
     if ($("#annee").val() != "all"){
         url += $("#annee").val()+"/";
         
@@ -161,14 +161,14 @@ function filtrerProfil(pseudo)
     $("#formFiltres").attr("action", url).submit();
 }
 
-function selectAnnee()
+function selectAnnee(cat)
 {
     if($("#annee").val() != "all") {
         $.ajax({
             type: "POST",
             url:  'ajax/getMois.php',
             async: false,
-            data: "annee="+$("#annee").val(),
+            data: "annee="+$("#annee").val()+"&cat="+cat,
             success: function(result){
                 $("#mois").html(result);
                 $("#mois").prop("disabled", false);
@@ -182,14 +182,14 @@ function selectAnnee()
     }
 }
 
-function selectMois()
+function selectMois(cat)
 {
     if($("#mois").val() != "all") {
         $.ajax({
             type: "POST",
             url:  'ajax/getJours.php',
             async: false,
-            data: "annee="+$("#annee").val()+"&mois="+$("#mois").val(),
+            data: "annee="+$("#annee").val()+"&mois="+$("#mois").val()+"&cat="+cat,
             success: function(result){
                 $("#jours").html(result);
                 $("#jours").prop("disabled", false);

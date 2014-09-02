@@ -32,7 +32,7 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Médias <b class="caret"></b></a>
                     <ul class="nav dropdown-menu">
-                        <li><a href="">Evènement</a></li>
+                        <li><a href="evenements">Évènements</a></li>
                         <li><a href="">Galerie</a></li>
                         <li><a href="">Revue de presse</a></li>
                     </ul>

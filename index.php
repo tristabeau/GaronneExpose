@@ -62,6 +62,10 @@ if (isset($_GET["v"])) {
             showArtistes();
             break;
 
+        case "evenements":
+            showEvenements();
+            break;
+
         case "contact":
             showContact();
             break;

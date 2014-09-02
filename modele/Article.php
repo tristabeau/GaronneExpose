@@ -130,10 +130,10 @@ class Article extends Base_Article
     } 
     
     /**
-     * Charger par categorie
+     * Charger les évènements
      * @return articles 
      */
-    public static function getByCategorie(PDO $pdo, $categorie, $annee, $mois, $jour, $page, $nb, $total)
+    public static function getEvenement(PDO $pdo, $annee, $mois, $jour, $page, $nb, $total)
     {
         $start = (($page - 1) * $nb) ;
         
@@ -142,14 +142,8 @@ class Article extends Base_Article
         } else {
             $max = $total - $start + 1;
         }
-        
-        $categories = array();
-        $categories[] =  $categorie->getIdCategorie();
-        foreach ($categorie->selectFils() as $cat) {
-            $categories[] =  $cat->getIdCategorie();
-        }
 
-        $pdoStatement = self::_select($pdo,Article::FIELDNAME_CATEGORIE_IDCATEGORIE.' IN ('.implode(",", $categories).') AND '.
+        $pdoStatement = self::_select($pdo,Article::FIELDNAME_CATEGORIE_IDCATEGORIE.' = 3 AND '.
                                                         Article::FIELDNAME_PUBLIE.' = 1 AND '.
                                                         Article::FIELDNAME_DATE." <= UNIX_TIMESTAMP() ".
                                                         ($annee != "all" ? "AND ".Article::FIELDNAME_ANNEE." = '".$annee."' " : "").
@@ -165,18 +159,12 @@ class Article extends Base_Article
     } 
     
     /**
-     * compter par categorie
+     * compter les évènements
      * @return articles 
      */
-    public static function countByCategorie(PDO $pdo, $categorie, $annee, $mois, $jour)
+    public static function countEvenement(PDO $pdo, $annee, $mois, $jour)
     {
-        $categories = array();
-        $categories[] =  $categorie->getIdCategorie();
-        foreach ($categorie->selectFils() as $cat) {
-            $categories[] =  $cat->getIdCategorie();
-        }
-
-        $pdoStatement = self::_select($pdo,Article::FIELDNAME_CATEGORIE_IDCATEGORIE.' IN ('.implode(",", $categories).') AND '.
+        $pdoStatement = self::_select($pdo,Article::FIELDNAME_CATEGORIE_IDCATEGORIE.' = 3 AND '.
                                                         Article::FIELDNAME_PUBLIE.' = 1 AND '.
                                                         Article::FIELDNAME_DATE." <= UNIX_TIMESTAMP() ".
                                                         ($annee != "all" ? "AND ".Article::FIELDNAME_ANNEE." = '".$annee."' " : "").
@@ -286,10 +274,10 @@ class Article extends Base_Article
     }  
         
     /**
-     * Charger par categorie
+     * Charger les peintures par artiste
      * @return articles 
      */
-    public static function getByAuteur(PDO $pdo, $idMembre, $annee, $mois, $jour, $page, $nb, $total)
+    public static function getPeintureByAuteur(PDO $pdo, $idMembre, $annee, $mois, $jour, $page, $nb, $total)
     {
         $start = (($page - 1) * $nb) ;      
         
@@ -304,6 +292,7 @@ class Article extends Base_Article
         } else {
             $pdoStatement = self::_select($pdo,Article::FIELDNAME_MEMBRE_IDMEMBRE.' = '.$idMembre.' AND '.
                                                             Article::FIELDNAME_PUBLIE.' = 1 AND '.
+                                                            Article::FIELDNAME_CATEGORIE_IDCATEGORIE.' = 2 AND '.
                                                             Article::FIELDNAME_DATE." <= UNIX_TIMESTAMP() ".
                                                             ($annee != "all" ? "AND ".Article::FIELDNAME_ANNEE." = '".$annee."' " : "").
                                                             ($mois != "all" ? "AND ".Article::FIELDNAME_MOIS." = '".$mois."' " : "").
@@ -320,13 +309,14 @@ class Article extends Base_Article
     } 
     
     /**
-     * compter par categorie
+     * compter le speintures par artiste
      * @return articles 
      */
-    public static function countByAuteur(PDO $pdo, $idMembre, $annee, $mois, $jour)
+    public static function countPeintureByAuteur(PDO $pdo, $idMembre, $annee, $mois, $jour)
     {
         $pdoStatement = self::_select($pdo,Article::FIELDNAME_MEMBRE_IDMEMBRE.' = '.$idMembre.' AND '.
                                                         Article::FIELDNAME_PUBLIE.' = 1 AND '.
+                                                        Article::FIELDNAME_CATEGORIE_IDCATEGORIE.' = 2 AND '.
                                                         Article::FIELDNAME_DATE." <= UNIX_TIMESTAMP() ".
                                                         ($annee != "all" ? "AND ".Article::FIELDNAME_ANNEE." = '".$annee."' " : "").
                                                         ($mois != "all" ? "AND ".Article::FIELDNAME_MOIS." = '".$mois."' " : "").
@@ -342,12 +332,13 @@ class Article extends Base_Article
     /**
      * @return les années où il y a eu des articles;
      */
-    public static function selectDistinctAnnee(PDO $pdo)
+    public static function selectDistinctAnnee(PDO $pdo, $cat)
     {
        
         $pdoStatement = $pdo->prepare('SELECT DISTINCT '.Article::FIELDNAME_ANNEE.
                                                     ' FROM '.Article::TABLENAME.
                                                     ' WHERE '.Article::FIELDNAME_PUBLIE.' = 1'.
+                                                    ' AND '.Article::FIELDNAME_CATEGORIE_IDCATEGORIE.' = '.$cat.
                                                     ' ORDER BY '.Article::FIELDNAME_ANNEE.' DESC');
                                                     
         if (!$pdoStatement->execute()) {
@@ -360,13 +351,14 @@ class Article extends Base_Article
     /**
      * @return les mois d'une année où il y a eu des articles;
      */
-    public static function selectDistinctMois(PDO $pdo, $annee)
+    public static function selectDistinctMois(PDO $pdo, $annee, $cat)
     {
        
         $pdoStatement = $pdo->prepare('SELECT DISTINCT '.Article::FIELDNAME_MOIS.
                                                     ' FROM '.Article::TABLENAME.
                                                     ' WHERE '.Article::FIELDNAME_ANNEE.' = ?'.
                                                     ' AND '.Article::FIELDNAME_PUBLIE.' = 1'.
+                                                    ' AND '.Article::FIELDNAME_CATEGORIE_IDCATEGORIE.' = '.$cat.
                                                     ' ORDER BY '.Article::FIELDNAME_MOIS.' DESC');
                                                     
         if (!$pdoStatement->execute(array($annee))) {
@@ -379,7 +371,7 @@ class Article extends Base_Article
     /**
      * @return les jours d'un mois d'une année où il y a eu des articles;
      */
-    public static function selectDistinctJours(PDO $pdo, $annee, $mois)
+    public static function selectDistinctJours(PDO $pdo, $annee, $mois, $cat)
     {
        
         $pdoStatement = $pdo->prepare('SELECT DISTINCT '.Article::FIELDNAME_JOUR.
@@ -387,6 +379,7 @@ class Article extends Base_Article
                                                     ' WHERE '.Article::FIELDNAME_ANNEE.' = ?'.
                                                     ' AND '.Article::FIELDNAME_MOIS.' = ?'.
                                                     ' AND '.Article::FIELDNAME_PUBLIE.' = 1'.
+                                                    ' AND '.Article::FIELDNAME_CATEGORIE_IDCATEGORIE.' = '.$cat.
                                                     ' ORDER BY '.Article::FIELDNAME_JOUR.' DESC');
                                                     
         if (!$pdoStatement->execute(array($annee, $mois))) {

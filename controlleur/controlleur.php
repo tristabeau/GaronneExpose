@@ -300,7 +300,7 @@ function showArtistes()
     include 'layout.php';
 }
 
-function getFiltres($a, $val)
+function getFiltres($a, $val = "")
 {
     $mysql = openConnexion();
 
@@ -309,10 +309,10 @@ function getFiltres($a, $val)
     $filtreJours = "<option value='all'>Tous</option>";
 
 
-    if ($a == "l") {
-        $selectAnnee = "selectAnnee();";
-        $selectMois = "selectMois();";
-        $annees = Article::selectDistinctAnnee($mysql);
+    if ($a == "e") {
+        $selectAnnee = "selectAnnee('3');";
+        $selectMois = "selectMois('3');";
+        $annees = Article::selectDistinctAnnee($mysql, 3);
 
         foreach ($annees as $annee) {
             $selected = (($annee["annee"] == $_GET["y"]) ? "selected" : "");
@@ -320,7 +320,7 @@ function getFiltres($a, $val)
         }
 
         if (isset($_GET["y"]) && ($_GET["y"] != "all")) {
-            $mois = Article::selectDistinctMois($mysql, $_GET["y"]);
+            $mois = Article::selectDistinctMois($mysql, $_GET["y"], 3);
 
             foreach ($mois as $moi) {
                 $selected = (($moi["mois"] == $_GET["m"]) ? "selected" : "");
@@ -328,7 +328,7 @@ function getFiltres($a, $val)
             }
 
             if (isset($_GET["m"]) && ($_GET["m"] != "all")) {
-                $jours = Article::selectDistinctJours($mysql, $_GET["y"], $_GET["m"]);
+                $jours = Article::selectDistinctJours($mysql, $_GET["y"], $_GET["m"], 3);
 
                 foreach ($jours as $jour) {
                     $selected = (($jour["jour"] == $_GET["j"]) ? "selected" : "");
@@ -337,7 +337,7 @@ function getFiltres($a, $val)
             }
         }
 
-        $filtrer = "filtrerListe('".$val."');";
+        $filtrer = "filtrerListeEvenement();";
     } else if ($a == "p"){
         $m = Membre::selectByPseudo($mysql, $val);
         $membre = $m[0];
@@ -437,8 +437,8 @@ function showProfilArtiste()
     }
 
     $articles = array();
-    $total = Article::countByAuteur($mysql, $membreId, $_GET["y"], $_GET["m"], $_GET["j"]);
-    $articles = Article::getByAuteur($mysql, $membreId, $_GET["y"], $_GET["m"], $_GET["j"], $_GET["p"], 12, $total);
+    $total = Article::countPeintureByAuteur($mysql, $membreId, $_GET["y"], $_GET["m"], $_GET["j"]);
+    $articles = Article::getPeintureByAuteur($mysql, $membreId, $_GET["y"], $_GET["m"], $_GET["j"], $_GET["p"], 12, $total);
     $nb_page = ceil($total / 12);
 
     $filtres = getFiltres("p", $_GET["n"]);
@@ -526,6 +526,104 @@ function showProfilArtiste()
 
     include 'layout.php';
 }
+
+function showEvenements()
+{
+    $mysql = openConnexion();
+
+    $pageTitle = " - Évènements";
+
+    $menu = getMenu();
+    $top = getTop();
+
+    $page = 1;
+
+    if ($_GET["p"] == "") {
+        $_GET["p"] = "1";
+    }
+
+    if ($_GET["y"] == "") {
+        $_GET["y"] = "all";
+    }
+
+    if ($_GET["m"] == "") {
+        $_GET["m"] = "all";
+    }
+
+    if ($_GET["j"] == "") {
+        $_GET["j"] = "all";
+    }
+
+    $articles = array();
+    $total = 0;
+
+    $total = Article::countEvenement($mysql, $_GET["y"], $_GET["m"], $_GET["j"]);
+    $articles = Article::getEvenement($mysql, $_GET["y"], $_GET["m"], $_GET["j"], $_GET["p"], 5, $total);
+    $nb_page = ceil($total / 5);
+
+    $content = "<div id='articles'>";
+
+    $content .= getFiltres("e");
+
+    if (count($articles)) {
+        foreach ($articles as $article) {
+            $membre = $article->getMembre();
+            $cat = $article->getCategorie();
+            $titre = $article->getTitre();
+            $id = $article->getIdArticle();
+            $image = $article->getImage();
+            $nbVue = $article->getNb_vues();
+            $annee = $article->getAnnee();
+            $mois = $article->getMois();
+            $jour = $article->getJour();
+            $permalien = $article->getPermalien();
+            $pseudo = $membre->getPseudo();
+            $avatar = md5(strtolower(trim($membre->getImage())));
+            $categorie = utf8_encode($cat->getNom());
+            $tag = $cat->getTag();
+            $membreId = $membre->getIdMembre();
+            $nbCom = count($article->selectCommentaires());
+            $date = returnFrenchDate(date("Y-m-d H:i",$article->getDate()));
+            $contenu = texte_resume_brut($article->getContenu(), 250);
+
+            ob_start();
+            include 'view/articles_liste_home.php';
+            $content .= ob_get_clean();
+        }
+
+        $content .= "</div>";
+
+        if ($nb_page > 1) {
+            $content .= "<div id='paginationBox'><ul class='pagination'>";
+            $url = "article/liste/".$_GET["c"]."/".($_GET["y"] != "all" ? $_GET["y"]."/" : "").($_GET["m"] != "all" ? $_GET["m"]."/" : "").($_GET["j"] != "all" ? $_GET["j"]."/" : "");
+            $content .= "<li><a href='".$url."' title='prev'><i class='fa fa-angle-double-left'></i></a></li>";
+            $content .= "<li class='divider'></li>";
+            for ($i = 1; $i <= $nb_page; $i++) {
+                $active = (((isset($_GET["p"])) && ($i == $_GET["p"])) || (($i == 1) && (!isset($_GET["p"])))) ? "class='active'" : "" ;
+                $content .= "<li ".$active."><a href='".$url.$i."§/'>".$i."</a></li>";
+            }
+            $content .= "<li class='divider'></li>";
+            $content .= "<li><a href='".$url.$nb_page."§/' title='next'><i class='fa fa-angle-double-right'></i></a></li>";
+            $content .= "</ul></div>";
+        }
+    } else {
+        $content = "Il n'y a aucun événement";
+    }
+
+    ob_start();
+    include 'view/widget_social.php';
+    $widget_social = ob_get_clean();
+
+    ob_start();
+    include 'view/widget_partenaires.php';
+    $widget_partenaires = ob_get_clean();
+
+    include 'layout.php';
+}
+
+
+
+
 
 
 function showCharte()
