@@ -107,6 +107,56 @@ function showBureau()
     include 'layout.php';
 }
 
+function showDocuments()
+{
+    $mysql = openConnexion();
+
+    $pageTitle = " - Documents";
+
+    $menu = getMenu();
+
+    $top = getTop();
+
+    ob_start();
+    include 'view/documents.php';
+    $content = ob_get_clean();
+
+    ob_start();
+    include 'view/widget_social.php';
+    $widget_social = ob_get_clean();
+
+    ob_start();
+    include 'view/widget_partenaires.php';
+    $widget_pub = ob_get_clean();
+
+    include 'layout.php';
+}
+
+function showProjet()
+{
+    $mysql = openConnexion();
+
+    $pageTitle = " - Projet";
+
+    $menu = getMenu();
+
+    $top = getTop();
+
+    ob_start();
+    include 'view/projet.php';
+    $content = ob_get_clean();
+
+    ob_start();
+    include 'view/widget_social.php';
+    $widget_social = ob_get_clean();
+
+    ob_start();
+    include 'view/widget_partenaires.php';
+    $widget_pub = ob_get_clean();
+
+    include 'layout.php';
+}
+
 
 function showContact()
 {

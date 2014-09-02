@@ -24,8 +24,8 @@
                     <ul class="nav dropdown-menu">
                         <li><a href="presentation">Présentation de l'association</a></li>
                         <li><a href="bureau">Le bureau</a></li>
-                        <li><a href="">Documents</a></li>
-                        <li><a href="">Projet</a></li>
+                        <li><a href="documents">Documents</a></li>
+                        <li><a href="projet">Projet</a></li>
                     </ul>
                 </li>
                 <li><a href="staff">Galerie des artistes</a></li>

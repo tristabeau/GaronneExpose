@@ -50,6 +50,14 @@ if (isset($_GET["v"])) {
             showBureau();
             break;
 
+        case "documents":
+            showDocuments();
+            break;
+
+        case "projet":
+            showProjet();
+            break;
+
         case "contact":
             showContact();
             break;

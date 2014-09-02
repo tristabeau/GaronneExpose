@@ -7,6 +7,8 @@ RewriteBase /GaronneExpose/
 
 RewriteRule ^presentation  index.php?v=presentation [L]
 RewriteRule ^bureau  index.php?v=bureau [L]
+RewriteRule ^documents  index.php?v=documents [L]
+RewriteRule ^projet  index.php?v=projet [L]
 
 RewriteRule ^staff$ index.php?v=staff [L]
 RewriteRule ^staff/(.+) index.php?v=staff&groupe=$1 [L]
