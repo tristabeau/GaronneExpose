@@ -48,6 +48,29 @@ function showHome()
     include 'layout.php';
 }
 
+function showPresentation ()
+{
+    $menu = getMenu();
+
+    $pageTitle = " - Présentation";
+
+    $top = getTop();
+
+    ob_start();
+    include 'view/presentation.php';
+    $content = ob_get_clean();
+
+    ob_start();
+    include 'view/widget_social.php';
+    $widget_social = ob_get_clean();
+
+    ob_start();
+    include 'view/widget_partenaires.php';
+    $widget_partenaires = ob_get_clean();
+
+    include 'layout.php';
+}
+
 function showContact()
 {
     $mysql = openConnexion();

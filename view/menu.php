@@ -22,7 +22,7 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Présentation <b class="caret"></b></a>
                     <ul class="nav dropdown-menu">
-                        <li><a href="">Présentation de l'association</a></li>
+                        <li><a href="presentation">Présentation de l'association</a></li>
                         <li><a href="">Le bureau</a></li>
                         <li><a href="">Documents</a></li>
                         <li><a href="">Projet</a></li>
@@ -37,8 +37,8 @@
                         <li><a href="">Revue de presse</a></li>
                     </ul>
                 </li>
-                <li><a href="staff">Partenaires</a></li>
-                <li><a href="staff">Contactez nous</a></li>
+                <li><a href="partenaires">Partenaires</a></li>
+                <li><a href="contact">Contactez nous</a></li>
                 <?php if ($admin || $artiste) { ?>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administration <b class="caret"></b></a>

@@ -30,6 +30,7 @@ RewriteRule ^profil/([^/]+)(/(\d{4})(/(\d{2})(/(\d{2}))?)?)?(/(\d+)§)? index.ph
 
 
 RewriteRule ^contact index.php?v=contact [L]
+RewriteRule ^presentation  index.php?v=presentation [L]
 RewriteRule ^charte index.php?v=charte [L]
 
 RewriteRule ^404 index.php?v=404 [L]
