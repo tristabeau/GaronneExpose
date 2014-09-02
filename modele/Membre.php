@@ -44,7 +44,20 @@ class Membre extends Base_Membre
             throw new Exception('Erreur lors du chargement des membres depuis la base de données');
         }
         return self::fetchAll($pdo,$pdoStatement);
-    } 
+    }
+
+    /**
+     * Cherche les artistes
+     * @return Membre(s)
+     */
+    public static function selectArtistes(PDO $pdo)
+    {
+        $pdoStatement = self::_select($pdo,array(Membre::FIELDNAME_GROUPE_IDGROUPE.' IN (3,4)'));
+        if (!$pdoStatement->execute()) {
+            throw new Exception('Erreur lors du chargement des membres depuis la base de données');
+        }
+        return self::fetchAll($pdo,$pdoStatement);
+    }
     
 }
 

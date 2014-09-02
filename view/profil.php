@@ -1,9 +1,6 @@
 <div id="profil">
-    <img src="http://www.gravatar.com/avatar/<?php echo $avatar; ?>?s=120&d=mm" alt="avatar" class="avatar"/>
+    <img src="" alt="avatar" class="avatar"/>
     <h1><?php echo $pseudo;  ?></h1>
-    <?php if ($isAuteur || $isAdmin) { ?>   
-    <h6><?php echo $titre;  ?></h6>
-    <?php } ?>    
     <p><?php echo $desc;  ?></p>    
     <ul class="social clearfix">
         <?php if (isset($facebook)) { ?>
@@ -21,21 +18,14 @@
     </ul>
     
     <br /> <br />
-
 </div>
+
 <img src="img/shadow.png" class="shadow" alt="shadow">
 
 <br />
 
-<?php if ($isAuteur || $isAdmin) { ?>
-
 <section class="widget">
-    <!--Header-->
-    <div class="header clearfix"><h4>Les articles de <?php echo $pseudo;  ?></h4></div>
+    <div class="header clearfix"><h4>Les peintures de <?php echo $pseudo;  ?></h4></div>
     <div><?php echo $filtres;  ?></div>
-    
     <?php echo $articles_related; ?>
-
 </section>
-
-<?php } ?>

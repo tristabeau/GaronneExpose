@@ -1,4 +1,57 @@
 <?php
+
+function getMenu()
+{
+    $mysql = openConnexion();
+    global $admin, $artiste;
+
+    $liste_categorie = "<li><a href='article/liste/all/'>Tous les articles</a></li>";
+    $categories = Categorie::getCategoriePere($mysql);
+
+    foreach ($categories as $categorie) {
+        $liste_categorie .= "<li><a href='article/liste/".$categorie->getTag()."/'>".utf8_encode($categorie->getNom())."</a></li>";
+    }
+
+    ob_start();
+    include 'view/menu.php';
+    $res = ob_get_clean();
+    return $res;
+}
+
+function getTop()
+{
+    $mysql = openConnexion();
+
+    if (isset($_SESSION["idMembre"])) {
+        global $membreCo;
+        $id = $_SESSION["idMembre"];
+        $pseudo = $membreCo->getPseudo();
+        $avatar = md5(strtolower(trim($membreCo->getImage())));
+        $url = "membre/deconnexion";
+        ob_start();
+        include 'view/widget_loged.php';
+        $widget_loged = ob_get_clean();
+    } else {
+        ob_start();
+        include 'view/widget_login.php';
+        $widget_login = ob_get_clean();
+    }
+
+    ob_start();
+    include 'view/article_proposer_form.php';
+    $content = ob_get_clean();
+
+    ob_start();
+    include 'view/widget_search.php';
+    $widget_search = ob_get_clean();
+
+    ob_start();
+    include 'view/top.php';
+    $res = ob_get_clean();
+
+    return $res;
+}
+
 function showHome()
 {
     $mysql = openConnexion();
@@ -44,6 +97,60 @@ function showHome()
     $widget_partenaires = ob_get_clean();
 
     $content .= "<div id='boutonTous'><a class='btn btn-primary btn-sm' href='article/liste/1/all'>Tous les articles</a></div>";
+
+    include 'layout.php';
+}
+
+function showContact()
+{
+    $mysql = openConnexion();
+
+    $pageTitle = " - Contact";
+
+    if (isset($_POST["name"])) {
+        $mail = new Email();
+        $mail->setFrom("LanceA News");
+        $mail->addTo("admin@lancea-online.com");
+        $mail->setSubject("Contact : LanceA News");
+        $message = "Nom : ".$_POST["name"]."<br /><br />";
+        $message .= "Mail : ".$_POST["email"]."<br /><br />";
+        $message .= $_POST["comment"];
+        $mail->setMessage($message);
+        $mail->sendMail();
+    }
+
+    $menu = getMenu();
+    $top = getTop();
+
+    ob_start();
+    include 'view/contact.php';
+    $contact = ob_get_clean();
+
+    include 'layout.php';
+}
+
+function show404()
+{
+    $mysql = openConnexion();
+
+    $menu = getMenu();
+    $top = getTop();
+
+    $pageTitle = " - Erreur";
+
+    ob_start();
+    include 'view/404.php';
+    $error404 = ob_get_clean();
+
+    $widget_recent = getRecent();
+
+    ob_start();
+    include 'view/widget_social.php';
+    $widget_social = ob_get_clean();
+
+    ob_start();
+    include 'view/widget_partenaires.php';
+    $widget_pub = ob_get_clean();
 
     include 'layout.php';
 }
@@ -102,7 +209,7 @@ function showBureau()
 
     ob_start();
     include 'view/widget_partenaires.php';
-    $widget_pub = ob_get_clean();
+    $widget_partenaires = ob_get_clean();
 
     include 'layout.php';
 }
@@ -127,7 +234,7 @@ function showDocuments()
 
     ob_start();
     include 'view/widget_partenaires.php';
-    $widget_pub = ob_get_clean();
+    $widget_partenaires = ob_get_clean();
 
     include 'layout.php';
 }
@@ -152,39 +259,275 @@ function showProjet()
 
     ob_start();
     include 'view/widget_partenaires.php';
-    $widget_pub = ob_get_clean();
+    $widget_partenaires = ob_get_clean();
 
     include 'layout.php';
 }
 
-
-function showContact()
+function showArtistes()
 {
     $mysql = openConnexion();
 
-    $pageTitle = " - Contact";
-    
-    if (isset($_POST["name"])) {
-        $mail = new Email();
-        $mail->setFrom("LanceA News");
-        $mail->addTo("admin@lancea-online.com");
-        $mail->setSubject("Contact : LanceA News");
-        $message = "Nom : ".$_POST["name"]."<br /><br />";
-        $message .= "Mail : ".$_POST["email"]."<br /><br />";
-        $message .= $_POST["comment"];
-        $mail->setMessage($message);
-        $mail->sendMail();
-    }
+    $pageTitle = " - Les Artistes";
 
     $menu = getMenu();
+
     $top = getTop();
-    
+
+    $content = "";
+
+    $auteurs = Membre::selectArtistes($mysql);
+
+    foreach ($auteurs as $auteur) {
+        $membreId = $auteur->getIdMembre();
+        $description = texte_resume_brut($auteur->getDescr(), 250);
+        $pseudo = $auteur->getPseudo();
+        $avatar = md5(strtolower(trim($auteur->getImage())));
+
+        ob_start();
+        include 'view/membre.php';
+        $content .= ob_get_clean();
+    }
+
     ob_start();
-    include 'view/contact.php';
-    $contact = ob_get_clean();
+    include 'view/widget_social.php';
+    $widget_social = ob_get_clean();
+
+    ob_start();
+    include 'view/widget_partenaires.php';
+    $widget_partenaires = ob_get_clean();
 
     include 'layout.php';
 }
+
+function getFiltres($a, $val)
+{
+    $mysql = openConnexion();
+
+    $filtreAnnees = "<option value='all'>Toutes</option>";
+    $filtreMois = "<option value='all'>Tous</option>";
+    $filtreJours = "<option value='all'>Tous</option>";
+
+
+    if ($a == "l") {
+        $selectAnnee = "selectAnnee();";
+        $selectMois = "selectMois();";
+        $annees = Article::selectDistinctAnnee($mysql);
+
+        foreach ($annees as $annee) {
+            $selected = (($annee["annee"] == $_GET["y"]) ? "selected" : "");
+            $filtreAnnees .= "<option value='".$annee["annee"]."' ".$selected.">".$annee["annee"]."</option>";
+        }
+
+        if (isset($_GET["y"]) && ($_GET["y"] != "all")) {
+            $mois = Article::selectDistinctMois($mysql, $_GET["y"]);
+
+            foreach ($mois as $moi) {
+                $selected = (($moi["mois"] == $_GET["m"]) ? "selected" : "");
+                $filtreMois .= "<option value='".$moi["mois"]."' ".$selected.">".$moi["mois"]."</option>";
+            }
+
+            if (isset($_GET["m"]) && ($_GET["m"] != "all")) {
+                $jours = Article::selectDistinctJours($mysql, $_GET["y"], $_GET["m"]);
+
+                foreach ($jours as $jour) {
+                    $selected = (($jour["jour"] == $_GET["j"]) ? "selected" : "");
+                    $filtreJours .= "<option value='".$jour["jour"]."' ".$selected.">".$jour["jour"]."</option>";
+                }
+            }
+        }
+
+        $filtrer = "filtrerListe('".$val."');";
+    } else if ($a == "p"){
+        $m = Membre::selectByPseudo($mysql, $val);
+        $membre = $m[0];
+
+        $selectAnnee = "selectAnneeProfil('".$membre->getIdMembre()."');";
+        $selectMois = "selectMoisProfil('".$membre->getIdMembre()."');";
+
+        $annees = Article::selectDistinctAnneeByProfil($mysql, $membre->getIdMembre());
+
+        foreach ($annees as $annee) {
+            $selected = (($annee["annee"] == $_GET["y"]) ? "selected" : "");
+            $filtreAnnees .= "<option value='".$annee["annee"]."' ".$selected.">".$annee["annee"]."</option>";
+        }
+
+        if (isset($_GET["y"]) && ($_GET["y"] != "all")) {
+            $mois = Article::selectDistinctMoisByProfil($mysql, $_GET["y"], $membre->getIdMembre());
+
+            foreach ($mois as $moi) {
+                $selected = (($moi["mois"] == $_GET["m"]) ? "selected" : "");
+                $filtreMois .= "<option value='".$moi["mois"]."' ".$selected.">".$moi["mois"]."</option>";
+            }
+
+            if (isset($_GET["m"]) && ($_GET["m"] != "all")) {
+                $jours = Article::selectDistinctJoursByProfil($mysql, $_GET["y"], $_GET["m"], $membre->getIdMembre());
+
+                foreach ($jours as $jour) {
+                    $selected = (($jour["jour"] == $_GET["j"]) ? "selected" : "");
+                    $filtreJours .= "<option value='".$jour["jour"]."' ".$selected.">".$jour["jour"]."</option>";
+                }
+            }
+        }
+
+        $filtrer = "filtrerProfil('".$val."');";
+    } else {
+        $selectAnnee = "selectAnneeSearch('".$val."');";
+        $selectMois = "selectMoisSearch('".$val."');";
+        $annees = Article::selectDistinctAnneeBySearch($mysql, $val);
+
+        foreach ($annees as $annee) {
+            $selected = (($annee["annee"] == $_GET["y"]) ? "selected" : "");
+            $filtreAnnees .= "<option value='".$annee["annee"]."' ".$selected.">".$annee["annee"]."</option>";
+        }
+
+        if (isset($_GET["y"]) && ($_GET["y"] != "all")) {
+            $mois = Article::selectDistinctMoisBySearch($mysql, $_GET["y"], $val);
+
+            foreach ($mois as $moi) {
+                $selected = (($moi["mois"] == $_GET["m"]) ? "selected" : "");
+                $filtreMois .= "<option value='".$moi["mois"]."' ".$selected.">".$moi["mois"]."</option>";
+            }
+
+            if (isset($_GET["m"]) && ($_GET["m"] != "all")) {
+                $jours = Article::selectDistinctJoursBySearch($mysql, $_GET["y"], $_GET["m"], $val);
+
+                foreach ($jours as $jour) {
+                    $selected = (($jour["jour"] == $_GET["j"]) ? "selected" : "");
+                    $filtreJours .= "<option value='".$jour["jour"]."' ".$selected.">".$jour["jour"]."</option>";
+                }
+            }
+        }
+
+        $filtrer = "filtrerSearch('".$val."');";
+    }
+
+    ob_start();
+    include 'view/articles_liste_filtres.php';
+    return ob_get_clean();
+}
+
+function showProfilArtiste()
+{
+    $mysql = openConnexion();
+
+    $menu = getMenu();
+    $top = getTop();
+
+    $page = 1;
+
+    $m = membre::selectByPseudo($mysql, $_GET["n"]);
+    $membre = $m[0];
+    $membreId = $membre->getIdMembre();
+
+    if ($_GET["p"] == "") {
+        $_GET["p"] = "1";
+    }
+
+    if ($_GET["y"] == "") {
+        $_GET["y"] = "all";
+    }
+
+    if ($_GET["m"] == "") {
+        $_GET["m"] = "all";
+    }
+
+    if ($_GET["j"] == "") {
+        $_GET["j"] = "all";
+    }
+
+    $articles = array();
+    $total = Article::countByAuteur($mysql, $membreId, $_GET["y"], $_GET["m"], $_GET["j"]);
+    $articles = Article::getByAuteur($mysql, $membreId, $_GET["y"], $_GET["m"], $_GET["j"], $_GET["p"], 12, $total);
+    $nb_page = ceil($total / 12);
+
+    $filtres = getFiltres("p", $_GET["n"]);
+
+    $articles_related = "";
+
+    if ($total <= 0) {
+        $content = "Cet artiste n'a encore publié aucune peinture.";
+    } else {
+        $i = 1;
+        $articles_related .= "<div class='row'>";
+
+        foreach ($articles as $article) {
+            if ($i >= 5) {
+                $articles_related .= "</div><br />";
+
+                $articles_related .= "<div class='row'>";
+                $i = 1;
+            }
+
+            $titre = $article->getTitre();
+            $id = $article->getIdArticle();
+            $annee = $article->getAnnee();
+            $mois = $article->getMois();
+            $jour = $article->getJour();
+            $permalien = $article->getPermalien();
+            $image = $article->getImage();
+            $nbCom = count($article->selectCommentaires());
+            $date = date("d/m/Y H:i",$article->getDate());
+
+            ob_start();
+            include 'view/articles_related.php';
+            $articles_related .= ob_get_clean();
+
+            $i++;
+        }
+
+        $articles_related .= "</div><br />";
+
+        if ($nb_page > 1) {
+            $articles_related .= "<div id='paginationBox'><ul class='pagination'>";
+            $url = "profil/".$_GET["n"]."/".($_GET["y"] != "all" ? $_GET["y"]."/" : "").($_GET["m"] != "all" ? $_GET["m"]."/" : "").($_GET["j"] != "all" ? $_GET["j"]."/" : "");
+            $articles_related .= "<li><a href='".$url."' title='prev'><i class='fa fa-angle-double-left'></i></a></li>";
+            $articles_related .= "<li class='divider'></li>";
+            for ($i = 1; $i <= $nb_page; $i++) {
+                $active = (((isset($_GET["p"])) && ($i == $_GET["p"])) || (($i == 1) && (!isset($_GET["p"])))) ? "class='active'" : "" ;
+                $articles_related .= "<li ".$active."><a href='".$url.$i."§'>".$i."</a></li>";
+            }
+            $articles_related .= "<li class='divider'></li>";
+            $articles_related .= "<li><a href='".$url.$nb_page."§' title='next'><i class='fa fa-angle-double-right'></i></a></li>";
+            $articles_related .= "</ul></div>";
+        }
+    }
+
+    $pageTitle = " - ".$membre->getPseudo();
+
+    $pseudo = $membre->getPseudo();
+    $titre = $membre->getTitre();
+    $desc = $membre->getDescr();
+    $avatar = md5(strtolower(trim($membre->getImage())));
+
+    if ($membre->getFacebook()) {
+        $facebook = $membre->getFacebook();
+    }
+    if ($membre->getTwitter()) {
+        $twitter = $membre->getTwitter();
+    }
+    if ($membre->getGoogle()) {
+        $google = $membre->getGoogle();
+    }
+    if ($membre->getSite()) {
+        $site = $membre->getSite();
+    }
+
+    ob_start();
+    include 'view/profil.php';
+    $content = ob_get_clean();
+
+    ob_start();
+    include 'view/widget_social.php';
+    $widget_social = ob_get_clean();
+
+    ob_start();
+    include 'view/widget_partenaires.php';
+    $widget_partenaires = ob_get_clean();
+
+    include 'layout.php';
+}
+
 
 function showCharte()
 {
@@ -508,24 +851,24 @@ function showSearchArticle()
 {
     $mysql = openConnexion();
     $pageTitle = " - Recherche";
-    
+
     $menu = getMenu();
-    $top = getTop(); 
-    
+    $top = getTop();
+
     $page = 1;
-    
+
     if ($_GET["p"] == "") {
         $_GET["p"] = "1";
-    } 
-   
+    }
+
     if ($_GET["y"] == "") {
         $_GET["y"] = "all";
-    } 
-    
+    }
+
     if ($_GET["m"] == "") {
         $_GET["m"] = "all";
-    } 
-    
+    }
+
     if ($_GET["j"] == "") {
         $_GET["j"] = "all";
     }
@@ -540,12 +883,12 @@ function showSearchArticle()
     ob_start();
     include 'view/page_title.php';
     $page_title = ob_get_clean();
-    
+
     if ($total <= 0) {
         $content = "<div id='articles'>Aucun resultat ne correspond à votre recherche.</div>";
     } else {
         $content = "<div id='articles'>";
-        
+
         $content .= getFiltres("s", $_GET["s"]);
 
         foreach ($articles as $article) {
@@ -580,7 +923,7 @@ function showSearchArticle()
             $url = "recherche/".$_GET["s"]."/".($_GET["y"] != "all" ? $_GET["y"]."/" : "").($_GET["m"] != "all" ? $_GET["m"]."/" : "").($_GET["j"] != "all" ? $_GET["j"]."/" : "");
             $content .= "<li><a href='".$url."' title='prev'><i class='fa fa-angle-double-left'></i></a></li>";
             $content .= "<li class='divider'></li>";
-            for ($i = 1; $i <= $nb_page; $i++) {  
+            for ($i = 1; $i <= $nb_page; $i++) {
                 $active = (((isset($_GET["p"])) && ($i == $_GET["p"])) || (($i == 1) && (!isset($_GET["p"])))) ? "class='active'" : "" ;
                 $content .= "<li ".$active."><a href='".$url.$i."§'>".$i."</a></li>";
             }
@@ -595,33 +938,7 @@ function showSearchArticle()
     ob_start();
     include 'view/widget_social.php';
     $widget_social = ob_get_clean();
-    
-    ob_start();
-    include 'view/widget_partenaires.php';
-    $widget_pub = ob_get_clean();
 
-    include 'layout.php';
-}
-
-function show404()
-{
-   $mysql = openConnexion();
-
-    $menu = getMenu();
-    $top = getTop(); 
-
-    $pageTitle = " - Erreur";
-    
-    ob_start();
-    include 'view/404.php';
-    $error404 = ob_get_clean();
-
-    $widget_recent = getRecent();
-
-    ob_start();
-    include 'view/widget_social.php';
-    $widget_social = ob_get_clean();
-    
     ob_start();
     include 'view/widget_partenaires.php';
     $widget_pub = ob_get_clean();
@@ -1004,58 +1321,6 @@ function showModMembre()
     include 'layout.php';
 }
 
-function getMenu()
-{
-    $mysql = openConnexion();
-    global $admin, $artiste;
-
-    $liste_categorie = "<li><a href='article/liste/all/'>Tous les articles</a></li>";
-    $categories = Categorie::getCategoriePere($mysql);
-
-    foreach ($categories as $categorie) {
-        $liste_categorie .= "<li><a href='article/liste/".$categorie->getTag()."/'>".utf8_encode($categorie->getNom())."</a></li>";
-    }
-
-    ob_start();
-    include 'view/menu.php';
-    $res = ob_get_clean();
-    return $res;
-}
-
-function getTop()
-{
-    $mysql = openConnexion();
-    
-    if (isset($_SESSION["idMembre"])) {
-        global $membreCo;
-        $id = $_SESSION["idMembre"];
-        $pseudo = $membreCo->getPseudo();
-        $avatar = md5(strtolower(trim($membreCo->getImage())));
-        $url = "membre/deconnexion";
-        ob_start();
-        include 'view/widget_loged.php';
-        $widget_loged = ob_get_clean();
-    } else {
-        ob_start();
-        include 'view/widget_login.php';
-        $widget_login = ob_get_clean();
-    }
-
-    ob_start();
-    include 'view/article_proposer_form.php';
-    $content = ob_get_clean();
-
-    ob_start();
-    include 'view/widget_search.php';
-    $widget_search = ob_get_clean();
-
-    ob_start();
-    include 'view/top.php';
-    $res = ob_get_clean();
-    
-    return $res;
-}
-
 function getRecent()
 {
     $mysql = openConnexion();
@@ -1116,113 +1381,7 @@ function getRecent()
     return $res;
 }
 
-function getFiltres($a, $val)
-{
-    $mysql = openConnexion();
 
-    $filtreAnnees = "<option value='all'>Toutes</option>";
-    $filtreMois = "<option value='all'>Tous</option>";
-    $filtreJours = "<option value='all'>Tous</option>";
-
-
-    if ($a == "l") {
-        $selectAnnee = "selectAnnee();";
-        $selectMois = "selectMois();";
-        $annees = Article::selectDistinctAnnee($mysql);
-
-        foreach ($annees as $annee) {
-            $selected = (($annee["annee"] == $_GET["y"]) ? "selected" : "");
-            $filtreAnnees .= "<option value='".$annee["annee"]."' ".$selected.">".$annee["annee"]."</option>";
-        }   
-        
-        if (isset($_GET["y"]) && ($_GET["y"] != "all")) {
-            $mois = Article::selectDistinctMois($mysql, $_GET["y"]);
-            
-            foreach ($mois as $moi) {
-                $selected = (($moi["mois"] == $_GET["m"]) ? "selected" : "");
-                $filtreMois .= "<option value='".$moi["mois"]."' ".$selected.">".$moi["mois"]."</option>";
-            }  
-            
-            if (isset($_GET["m"]) && ($_GET["m"] != "all")) {
-                $jours = Article::selectDistinctJours($mysql, $_GET["y"], $_GET["m"]);
-                
-                foreach ($jours as $jour) {
-                    $selected = (($jour["jour"] == $_GET["j"]) ? "selected" : "");
-                    $filtreJours .= "<option value='".$jour["jour"]."' ".$selected.">".$jour["jour"]."</option>";
-                }
-            }
-        }  
-        
-        $filtrer = "filtrerListe('".$val."');";
-    } else if ($a == "p"){
-        $m = Membre::selectByPseudo($mysql, $val);      
-        $membre = $m[0];      
-        
-        $selectAnnee = "selectAnneeProfil('".$membre->getIdMembre()."');";
-        $selectMois = "selectMoisProfil('".$membre->getIdMembre()."');";
-        
-        $annees = Article::selectDistinctAnneeByProfil($mysql, $membre->getIdMembre());
-
-        foreach ($annees as $annee) {
-            $selected = (($annee["annee"] == $_GET["y"]) ? "selected" : "");
-            $filtreAnnees .= "<option value='".$annee["annee"]."' ".$selected.">".$annee["annee"]."</option>";
-        }   
-        
-        if (isset($_GET["y"]) && ($_GET["y"] != "all")) {
-            $mois = Article::selectDistinctMoisByProfil($mysql, $_GET["y"], $membre->getIdMembre());
-            
-            foreach ($mois as $moi) {
-                $selected = (($moi["mois"] == $_GET["m"]) ? "selected" : "");
-                $filtreMois .= "<option value='".$moi["mois"]."' ".$selected.">".$moi["mois"]."</option>";
-            }  
-            
-            if (isset($_GET["m"]) && ($_GET["m"] != "all")) {
-                $jours = Article::selectDistinctJoursByProfil($mysql, $_GET["y"], $_GET["m"], $membre->getIdMembre());
-                
-                foreach ($jours as $jour) {
-                    $selected = (($jour["jour"] == $_GET["j"]) ? "selected" : "");
-                    $filtreJours .= "<option value='".$jour["jour"]."' ".$selected.">".$jour["jour"]."</option>";
-                }
-            }
-        }
-        
-        $filtrer = "filtrerProfil('".$val."');";
-    } else {
-        $selectAnnee = "selectAnneeSearch('".$val."');";
-        $selectMois = "selectMoisSearch('".$val."');";
-        $annees = Article::selectDistinctAnneeBySearch($mysql, $val);
-
-        foreach ($annees as $annee) {
-            $selected = (($annee["annee"] == $_GET["y"]) ? "selected" : "");
-            $filtreAnnees .= "<option value='".$annee["annee"]."' ".$selected.">".$annee["annee"]."</option>";
-        }   
-        
-        if (isset($_GET["y"]) && ($_GET["y"] != "all")) {
-            $mois = Article::selectDistinctMoisBySearch($mysql, $_GET["y"], $val);
-            
-            foreach ($mois as $moi) {
-                $selected = (($moi["mois"] == $_GET["m"]) ? "selected" : "");
-                $filtreMois .= "<option value='".$moi["mois"]."' ".$selected.">".$moi["mois"]."</option>";
-            }  
-            
-            if (isset($_GET["m"]) && ($_GET["m"] != "all")) {
-                $jours = Article::selectDistinctJoursBySearch($mysql, $_GET["y"], $_GET["m"], $val);
-                
-                foreach ($jours as $jour) {
-                    $selected = (($jour["jour"] == $_GET["j"]) ? "selected" : "");
-                    $filtreJours .= "<option value='".$jour["jour"]."' ".$selected.">".$jour["jour"]."</option>";
-                }
-            }
-        }
-        
-        $filtrer = "filtrerSearch('".$val."');";
-    }
-    
-    ob_start();
-    include 'view/articles_liste_filtres.php';
-    $res = ob_get_clean();
-    return $res;
-}
 
 function showProposerArticle()
 {

@@ -28,17 +28,16 @@
                         <li><a href="projet">Projet</a></li>
                     </ul>
                 </li>
-                <li><a href="staff">Galerie des artistes</a></li>
+                <li><a href="artistes">Galerie des artistes</a></li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Qui parle de nous <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Médias <b class="caret"></b></a>
                     <ul class="nav dropdown-menu">
-                        <li><a href="">Evenement</a></li>
+                        <li><a href="">Evènement</a></li>
                         <li><a href="">Galerie</a></li>
                         <li><a href="">Revue de presse</a></li>
                     </ul>
                 </li>
                 <li><a href="partenaires">Partenaires</a></li>
-                <li><a href="contact">Contactez nous</a></li>
                 <?php if ($admin || $artiste) { ?>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administration <b class="caret"></b></a>

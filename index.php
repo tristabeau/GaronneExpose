@@ -20,11 +20,11 @@ $admin = false;
 $artiste = false;
 
 if (isset($_COOKIE["membre"])) {
-    $_SESSION["idMembre"] = $_COOKIE["membre"];
+    $_SESSION["idArtiste"] = $_COOKIE["membre"];
 }
 
-if (isset($_SESSION["idMembre"])) {
-    $membreCo = Membre::load($mysql, $_SESSION["idMembre"]);
+if (isset($_SESSION["idArtiste"])) {
+    $membreCo = Membre::load($mysql, $_SESSION["idArtiste"]);
     if ($membreCo->getGroupeId() == 3) {
         $admin = true;
     }
@@ -58,21 +58,61 @@ if (isset($_GET["v"])) {
             showProjet();
             break;
 
+        case "artistes":
+            showArtistes();
+            break;
+
         case "contact":
             showContact();
             break;
-            
-		case "charte":
-			showCharte();
-			break;
-            
-        case "staff":
-            showStaff();
-            break;
-            
+
         case "404":
             show404();
             break;
+
+        case "artiste":
+            switch ($_GET["a"]) {
+                case "inscription":
+                    showInscriptionArtiste();
+                    break;
+
+                case "validation":
+                    showValidationArtiste();
+                    break;
+
+                case "deconnexion":
+                    if (isset($_SESSION["idArtiste"])) {
+                        showDeconnexionArtiste();
+                    } else {
+                        show404();
+                    }
+                    break;
+
+                case "profil":
+                    showProfilArtiste();
+                    break;
+
+                case "modification":
+                    if (isset($_SESSION["idArtiste"])) {
+                        showModArtiste();
+                    } else {
+                        show404();
+                    }
+                    break;
+
+                case "password":
+                    showPassword();
+                    break;
+
+                default :
+                    show404();
+                    break;
+            }
+            break;
+
+
+
+
 
         case "admin":
             if ($admin || $artiste) {
@@ -167,45 +207,7 @@ if (isset($_GET["v"])) {
             }
             break;
 
-        case "membre":
-            switch ($_GET["a"]) {
-                case "inscription":
-                    showInscriptionMembre();
-                    break;
 
-                case "validation":
-                    showValidationMembre();
-                    break;
-
-                case "deconnexion":
-                    if (isset($_SESSION["idMembre"])) {
-                        showDeconnexionMembre();
-                    } else {
-                        show404();
-                    }
-                    break;
-
-                case "profil":
-                    showProfilMembre();
-                    break;
-
-                case "modMembre":
-                    if (isset($_SESSION["idMembre"])) {
-                        showModMembre();
-                    } else {
-                        show404();
-                    }
-                    break;
-
-                case "password":
-                    showPassword();
-                    break;
-
-                default :
-                    show404();
-                    break;
-            }
-            break;
 
         case "article":
             switch ($_GET["a"]) {
