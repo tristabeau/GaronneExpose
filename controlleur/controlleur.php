@@ -444,10 +444,9 @@ function showProfilArtiste()
     $filtres = getFiltres("p", $_GET["n"]);
 
     $articles_related = "";
+    $nb_peinture = count($articles);
 
-    if ($total <= 0) {
-        $content = "Cet artiste n'a encore publié aucune peinture.";
-    } else {
+    if ($total > 0) {
         $i = 1;
         $articles_related .= "<div class='row'>";
 

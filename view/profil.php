@@ -24,8 +24,12 @@
 
 <br />
 
+<?php if ($nb_peinture) { ?>
+
 <section class="widget">
     <div class="header clearfix"><h4>Les peintures de <?php echo $pseudo;  ?></h4></div>
     <div><?php echo $filtres;  ?></div>
     <?php echo $articles_related; ?>
 </section>
+
+<?php } ?>
