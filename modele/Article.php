@@ -18,7 +18,7 @@ class Article extends Base_Article
         if (!$pdoStatement->execute()) {
             throw new Exception('Erreur lors du chargement des derniers articles depuis la base de données');
         }
-        
+
         return self::fetchAll($pdo,$pdoStatement);
     }   
     

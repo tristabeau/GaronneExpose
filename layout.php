@@ -2,7 +2,7 @@
 <html id="blog-version-1" lang="fr-FR">
     
     <head>
-        <title>LanceA News <?php echo $pageTitle; ?></title>
+        <title>Garonne Expose <?php echo $pageTitle; ?></title>
         <!-- <base href="http://37.59.55.9/news/"> -->
         <!-- <base href="http://37.59.55.9/news/"> -->
         <base href="http://localhost/GaronneExpose/">
@@ -77,7 +77,7 @@
                 
                     <!-- CENTER CONTENT
                     ======================================================== -->
-                    <div id="center-content" class="col-md-9">
+                    <div id="center-content" class="col-md-10">
 
                         <?php if(isset($articles_liste)) { echo $articles_liste; } ?>
                         
@@ -91,7 +91,7 @@
 
                     <!-- SIDE CONTENT
                     ======================================================== -->
-                    <aside id="right-content" class="col-md-3">
+                    <aside id="right-content" class="col-md-2">
                         <?php if(isset($widget_social)) { echo $widget_social; } ?>
 
                         <?php if(isset($widget_partenaires)) { echo $widget_partenaires; } ?>
@@ -130,11 +130,9 @@
                 
                 <div class="container">
                     
-                    <p>Copyright &copy; 2013 - <strong>LanceA</strong></p>
+                    <p>Copyright &copy; 2014 - <strong>Garonne Expose</strong></p>
                     
                     <ul>
-                        <li><a href="article/proposer">Proposer une news</a></li>
-						<li><a href="charte">Charte de publication</a></li>
                         <li><a href="contact">Contact</a></li>
                     </ul>
                     

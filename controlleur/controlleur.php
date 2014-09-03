@@ -64,29 +64,42 @@ function showHome()
 
     $articles = Article::getLastArticles($mysql);
     $content = "";
+    $it = 1;
+    if (count($articles)) {
+        foreach ($articles as $article) {
+            if ($it == 1) {
+                $content .= "<div class='row'>";
+            }
+            $membre = $article->getMembre();
+            $cat = $article->getCategorie();
+            $titre = $article->getTitre();
+            $id = $article->getIdArticle();
+            $image = $article->getImage();
+            $nbVue = $article->getNb_vues();
+            $annee = $article->getAnnee();
+            $mois = $article->getMois();
+            $jour = $article->getJour();
+            $permalien = $article->getPermalien();
+            $pseudo = $membre->getPseudo();
+            $avatar = md5(strtolower(trim($membre->getImage())));
+            $categorie = utf8_encode($cat->getNom());
+            $tag = $cat->getTag();
+            $membreId = $membre->getIdMembre();
+            $date = returnFrenchDate(date("Y-m-d H:i",$article->getDate()));
+            $contenu = texte_resume_brut($article->getContenu(), 600);
 
-    foreach ($articles as $article) {
-        $membre = $article->getMembre();
-        $cat = $article->getCategorie();
-        $titre = $article->getTitre();
-        $id = $article->getIdArticle();
-        $image = $article->getImage();
-        $nbVue = $article->getNb_vues();
-        $annee = $article->getAnnee();
-        $mois = $article->getMois();
-        $jour = $article->getJour();
-        $permalien = $article->getPermalien();
-        $pseudo = $membre->getPseudo();
-        $avatar = md5(strtolower(trim($membre->getImage())));
-        $categorie = utf8_encode($cat->getNom());
-        $tag = $cat->getTag();
-        $membreId = $membre->getIdMembre();
-        $date = returnFrenchDate(date("Y-m-d H:i",$article->getDate()));
-        $contenu = texte_resume_brut($article->getContenu(), 600);
+            ob_start();
+            include 'view/articles_liste_home.php';
+            $content .= ob_get_clean();
 
-        ob_start();
-        include 'view/articles_liste_home.php';
-        $content .= ob_get_clean();
+            if ($it == 3) {
+                $content .= "</div>";
+                $it = 0;
+            }
+
+            $it++;
+        }
+        $content .= "</div>";
     }
 
     ob_start();
@@ -97,7 +110,7 @@ function showHome()
     include 'view/widget_partenaires.php';
     $widget_partenaires = ob_get_clean();
 
-    $content .= "<div id='boutonTous'><a class='btn btn-primary btn-sm' href='contenus/liste/1/all'>Anciennes publications</a></div>";
+    $content .= "<div id='boutonTous' class='col-md-12'><a class='btn btn-primary btn-sm' href='contenus/liste/1/all'>Anciennes publications</a></div>";
 
     include 'layout.php';
 }

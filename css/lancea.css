@@ -237,11 +237,11 @@ textarea{
         padding-top: 60px !important;
         margin-bottom: 10px;
     }
-    
+
     #right-content{
-        padding: 60px;
+        padding-top: 60px !important;
     }
-    
+
     #top-nav #password {
         margin-left: 2px;
     }
