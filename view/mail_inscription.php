@@ -1,11 +1,11 @@
 <html>    
     <head>
-        <title>LanceA News</title>
+        <title>Garonne Expose</title>
     </head>
     
     <body>
         <header>
-            <h3>Bienvenue sur le site LanceA News</h3>
+            <h3>Bienvenue sur le site Garonne Expose</h3>
         </header>      
 
         <div>
@@ -13,7 +13,7 @@
             
             Merci pour votre venue chez nous !
             
-            Le staff LanceA.
+            L'équipe Garonne Expose.
         </div>         
     </body>    
 </html>

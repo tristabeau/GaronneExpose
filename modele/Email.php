@@ -311,7 +311,7 @@ class Email {
 
 			$this->mail_content['xheaders']['X-Mailer'] = 'FM Logistic';
 			$this->mail_content['xheaders']['Mime-Version'] = "1.0";
-			$this->mail_content['xheaders']['Content-Type'] = $this->mail_content['format'].'; charset='.$this->mail_content['charset'];
+			$this->mail_content['xheaders']['Content-Type'] = $this->mail_content['format'].'; charset="UTF-8"';
 
 			//If we ask for an acknowledge
 			if ($this->mail_content['acknowledge']) {

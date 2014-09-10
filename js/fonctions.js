@@ -18,6 +18,11 @@ function Annuler()
     $("#nom").val("");
 }
 
+function AnnulerPresse()
+{
+    $("#fileName").val("Fichier...");
+}
+
 function modGroupe(groupe, nom)
 {
     $("#idGroupe").val(groupe);
@@ -30,6 +35,14 @@ function supGroupe(groupe)
     if(confirm("Voulez-vous supprimer ce groupe ?")) {
         $("#idGroupe").val(groupe);
         $("#formAction").attr("action", "index.php?v=admin&a=supGroupe").submit();
+    }
+}
+
+function supPresse(presse)
+{
+    if(confirm("Voulez-vous supprimer cette revue de presse ?")) {
+        $("#idPresse").val(presse);
+        $("#formAction").attr("action", "index.php?v=admin&a=supPresse").submit();
     }
 }
 
@@ -46,7 +59,7 @@ function connexion()
             }  else if (result == "1") {
                 $("#erreurActive").show("slow").delay(4000).hide("slow");
             } else {
-                document.location.href="/";
+                document.location.href="index.php";
             }
         }
     });
@@ -63,6 +76,19 @@ function supMembre(membre)
     if(confirm("Voulez-vous supprimer ce membre ?")) {
         $("#idMembre").val(membre);
         $("#formAction").attr("action", "index.php?v=admin&a=supArtiste").submit();
+    }
+}
+function modPartenaire(partenaire)
+{
+    $("#idPartenaire").val(partenaire);
+    $("#formAction").attr("action", "index.php?v=admin&a=modPartenaire").submit();
+}
+
+function supPartenaire(partenaire)
+{
+    if(confirm("Voulez-vous supprimer ce partenaire ?")) {
+        $("#idPartenaire").val(partenaire);
+        $("#formAction").attr("action", "index.php?v=admin&a=supPartenaire").submit();
     }
 }
 
@@ -128,6 +154,24 @@ function filtrerListeEvenement()
     $("#formFiltres").attr("action", url).submit();
 }
 
+function filtrerListe()
+{
+    url = "contenus/liste/";
+    if ($("#annee").val() != "all"){
+        url += $("#annee").val()+"/";
+
+        if ($("#mois").val() != "all"){
+            url += $("#mois").val()+"/";
+
+            if ($("#jours").val() != "all"){
+                url += $("#jours").val()+"/";
+            }
+        }
+    }
+
+    $("#formFiltres").attr("action", url).submit();
+}
+
 function filtrerProfil(pseudo)
 {
     url = "profil/"+pseudo+"/";
@@ -162,9 +206,10 @@ function selectAnnee(cat)
     } else {
         $("#mois").prop("disabled", true);
         $("#mois").val("all");
-        $("#jours").prop("disabled", true);
-        $("#jours").val("all");
     }
+
+    $("#jours").prop("disabled", true);
+    $("#jours").val("all");
 }
 
 function selectMois(cat)

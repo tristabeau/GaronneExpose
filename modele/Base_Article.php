@@ -851,7 +851,7 @@ abstract class Base_Article
         if (!$pdoStatement->execute(array($membre->getIdMembre()))) {
             throw new Exception('Erreur lors du chargement de tous/toutes les articles d\'un(e) membre depuis la base de données');
         }
-        return $pdoStatement;
+        return self::fetchAll($pdo, $pdoStatement);
     }
     
     /**

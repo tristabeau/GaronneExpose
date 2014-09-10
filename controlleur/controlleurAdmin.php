@@ -13,16 +13,13 @@ function showAdminCategorie()
     $table .= "<thead>";
     $table .= "<tr>";
     $table .= "<th data-sort-initial='true'>Nom</th>";
-    $table .= "<th data-hide='phone'>Parent</th>";
     $table .= "<th data-sort-ignore='true'>Actions</th>";
     $table .= "</tr>";
     $table .= "</thead>";
     $table .= "<tbody>";
     foreach ($categories as $categorie) {
-        $parent = $categorie->getPere();
         $table .= "<tr>";
         $table .= "<td>".utf8_encode($categorie->getNom())."</td>";
-        $table .= "<td>".($parent  ? utf8_encode($parent->getNom()) : ' ')."</td>";
         $table .= "<td>";
         $table .= "<button class='btn btn-primary btn-xs' onclick='modCat(\"".$categorie->getIdCategorie()."\")'>Modifier</button>";
         $table .= " ";
@@ -35,23 +32,16 @@ function showAdminCategorie()
     $table .= "</tbody>";
     $table .= "<tfoot class='hide-if-no-paging'>";
     $table .= "<tr>";
-    $table .= "<td colspan='4'>";
+    $table .= "<td colspan='3'>";
     $table .= "<div class='pagination pagination-centered'></div>";
     $table .= "</td>";
     $table .= "</tr>";
     $table .= "</tfoot>";
     $table .= "</table>";
+
     ob_start();
     include 'view/categories_liste.php';
     $content = ob_get_clean();
-
-    ob_start();
-    include 'view/widget_social.php';
-    $widget_social = ob_get_clean();
-    
-    ob_start();
-    include 'view/widget_partenaires.php';
-    $widget_partenaires = ob_get_clean();
 
     include 'layout.php';
 }
@@ -66,12 +56,12 @@ function showAdminModCat()
         $categorie = Categorie::load($mysql, $_POST["idCategorie"]);
         $categorie->setNom($_POST["nom"],false);
         $categorie->setTag(strtoupper(substr($_POST["nom"],0,5)),false);
-        $categorie->setPereById($_POST["parent"],false);
+        $categorie->setPereById("",false);
         $categorie->update();
 
         $host = $_SERVER['HTTP_HOST'];
         $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-        header("Location: http://$host$uri/index.php?v=admin&a=categorie");
+        header("Location: http://$host$uri/index.php?v=admin&a=categories");
     } else {
         $menu = getMenu();
         $top = getTop(); 
@@ -92,14 +82,6 @@ function showAdminModCat()
         include 'view/categorie_form.php';
         $content = ob_get_clean();
 
-        ob_start();
-        include 'view/widget_social.php';
-        $widget_social = ob_get_clean();
-    
-        ob_start();
-        include 'view/widget_partenaires.php';
-        $widget_partenaires = ob_get_clean();
-
         include 'layout.php';
     }
 }
@@ -111,12 +93,11 @@ function showAdminNewCat()
     $pageTitle = " - Création d'une catégorie";
     
     if (isset($_POST["nom"])) {
-        $parent = $_POST["parent"] ? Categorie::load($mysql, $_POST["parent"]) : null;
-        Categorie::create($mysql, $_POST["nom"], strtoupper(substr($_POST["nom"],0,5)), $parent);
+        Categorie::create($mysql, $_POST["nom"], strtoupper(substr($_POST["nom"],0,5)), "");
 
         $host = $_SERVER['HTTP_HOST'];
         $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-        header("Location: http://$host$uri/index.php?v=admin&a=categorie");
+        header("Location: http://$host$uri/index.php?v=admin&a=categories");
     } else {
         $menu = getMenu();
         $top = getTop(); 
@@ -137,14 +118,6 @@ function showAdminNewCat()
         include 'view/categorie_form.php';
         $content = ob_get_clean();
 
-        ob_start();
-        include 'view/widget_social.php';
-        $widget_social = ob_get_clean();
-    
-        ob_start();
-        include 'view/widget_partenaires.php';
-        $widget_partenaires = ob_get_clean();
-
         include 'layout.php';
     }
 }
@@ -157,7 +130,7 @@ function showAdminSupCat()
 
     $host  = $_SERVER['HTTP_HOST'];
     $uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-    header("Location: http://$host$uri/index.php?v=admin&a=categorie");
+    header("Location: http://$host$uri/index.php?v=admin&a=categories");
 }
 
 function showAdminGroupe()
@@ -165,6 +138,7 @@ function showAdminGroupe()
     $pageTitle = " - Gestion des groupes";
 
     $mysql = openConnexion();
+
     if (isset($_POST['nom'])) {
         if (isset($_POST['idGroupe']) && $_POST['idGroupe'] != "") {
             $groupe = Groupe::load($mysql, $_POST['idGroupe']);
@@ -213,14 +187,6 @@ function showAdminGroupe()
     include 'view/groupes_liste.php';
     $content = ob_get_clean();
 
-    ob_start();
-    include 'view/widget_social.php';
-    $widget_social = ob_get_clean();
-    
-    ob_start();
-    include 'view/widget_partenaires.php';
-    $widget_partenaires = ob_get_clean();
-
     include 'layout.php';
 }
 
@@ -232,7 +198,7 @@ function showAdminSupGroupe()
 
     $host  = $_SERVER['HTTP_HOST'];
     $uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-    header("Location: http://$host$uri/index.php?v=admin&a=groupe");
+    header("Location: http://$host$uri/index.php?v=admin&a=groupes");
 }
 
 function showAdminMembre()
@@ -282,13 +248,6 @@ function showAdminMembre()
     include 'view/membre_liste.php';
     $content = ob_get_clean();
 
-    ob_start();
-    include 'view/widget_social.php';
-    $widget_social = ob_get_clean();
-    
-    ob_start();
-    include 'view/widget_partenaires.php';
-    $widget_partenaires = ob_get_clean();
     include 'layout.php';
 }
 
@@ -357,14 +316,6 @@ function showAdminModMembre()
     include 'view/membre_form.php';
     $content = ob_get_clean();
 
-    ob_start();
-    include 'view/widget_social.php';
-    $widget_social = ob_get_clean();
-    
-    ob_start();
-    include 'view/widget_partenaires.php';
-    $widget_partenaires = ob_get_clean();
-
     include 'layout.php';
 }
 
@@ -402,7 +353,7 @@ function showAdminNewMembre()
     $facebook = "";
     $twitter = "";
     $google = "";
-    $urlRetour = "index.php?v=admin&a=artiste";
+    $urlRetour = "index.php?v=admin&a=artistes";
     $mdpReq = "required";
     $site = "";
     $action = "Créer";
@@ -410,14 +361,6 @@ function showAdminNewMembre()
     ob_start();
     include 'view/membre_form.php';
     $content = ob_get_clean();
-
-    ob_start();
-    include 'view/widget_social.php';
-    $widget_social = ob_get_clean();
-    
-    ob_start();
-    include 'view/widget_partenaires.php';
-    $widget_partenaires = ob_get_clean();
 
     include 'layout.php';
 }
@@ -469,18 +412,10 @@ function showAdminArticle()
     $table .= "</tr>";
     $table .= "</tfoot>";
     $table .= "</table>";
-    
+
     ob_start();
     include 'view/articles_liste.php';
     $content = ob_get_clean();
-
-    ob_start();
-    include 'view/widget_social.php';
-    $widget_social = ob_get_clean();
-    
-    ob_start();
-    include 'view/widget_partenaires.php';
-    $widget_partenaires = ob_get_clean();
 
     include 'layout.php';
 }
@@ -490,7 +425,7 @@ function showAdminNewArticle()
     $mysql = openConnexion();
 
     $pageTitle = " - Nouveau contenu";
-    
+
     $erreur = "";
 
     if (isset($_POST["titre"])) {
@@ -502,16 +437,16 @@ function showAdminNewArticle()
             $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
             $extension_upload = strtolower(  substr(  strrchr($_FILES['image']['name'], '.')  ,1)  );
             $image_sizes = getimagesize($_FILES['image']['tmp_name']);
-            
+
             if ($image_sizes[0] < 700 || $image_sizes[1] < 400) {
                 $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> L'image est trop petite! 700x400 minimum!</div>";
             } else if ( ! in_array($extension_upload,$extensions_valides) ) {
                 $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> L'extension de votre image n'est pas bonne!</div>";
             } else {
-                $taille_maxi = 512000;
+                $taille_maxi = 2000000;
                 $taille = filesize($_FILES['image']['tmp_name']);
                 if ($taille > $taille_maxi) {
-                    $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> La taille de votre fichier est supérieur à 512 Ko!</div>";
+                    $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> La taille de votre fichier est supérieur à 2Mo!</div>";
                 } else {
                     $name = to_permalink($_POST["titre"])."-".random(10).strrchr($_FILES['image']['name'], '.');
                     $nom = "img/articles/$name";
@@ -543,9 +478,9 @@ function showAdminNewArticle()
             $minute = intval(substr($_POST["heure_submit"],3,2));
             $date = strtotime(date("Y-m-d H:i", mktime($heure, $minute, 0, $mois, $jour, $annee)));
             $permalien = to_permalink($_POST["titre"]);
-            
+
             global $membreCo;
-            
+
             $article = Article::create($mysql, $_POST["titre"], $date, str_pad($annee,4,'0',STR_PAD_LEFT), str_pad($mois,2,'0',STR_PAD_LEFT), str_pad($jour,2,'0',STR_PAD_LEFT), date("H:i",$date), $_POST["contenu"], $image, 0, $permalien, "", $membreCo->getPseudo(), $membre, $categorie, "", $_POST["publie"], "");
 
             $host = $_SERVER['HTTP_HOST'];
@@ -554,7 +489,7 @@ function showAdminNewArticle()
         }
     } else {
         $menu = getMenu();
-        $top = getTop(); 
+        $top = getTop();
 
         $titre = (isset($_POST["titre"]) ? $_POST["titre"] : "");
         $idArticle = "";
@@ -573,13 +508,14 @@ function showAdminNewArticle()
         $contenu = "Contenu de votre article";
         $action = "Créer";
 
-        $admins = Groupe::load($mysql, 3);
-        $auteurs = Groupe::load($mysql, 2);
-        $membres = array_merge(Membre::selectByGroupe($mysql, $admins), Membre::selectByGroupe($mysql, $auteurs));
+        $admins = Groupe::load($mysql, 1);
+        $bureau = Groupe::load($mysql, 3);
+        $auteurs = Groupe::load($mysql, 4);
+        $membres = array_merge(Membre::selectByGroupe($mysql, $admins), Membre::selectByGroupe($mysql, $auteurs), Membre::selectByGroupe($mysql, $bureau));
         $auteur = "";
 
         foreach ($membres as $membre) {
-            $selected = (($membre->getIdMembre() == $_SESSION["idMembre"]) ? "selected" : "");
+            $selected = (($membre->getIdMembre() == $_SESSION["idArtiste"]) ? "selected" : "");
             $auteur .= "<option value='".$membre->getIdMembre()."' ".$selected.">".utf8_encode($membre->getPseudo())."</option>";
         }
 
@@ -589,20 +525,12 @@ function showAdminNewArticle()
             $selected = ((isset($_POST["categorie"]) && ($cat->getIdCategorie() == $_POST["categorie"])) ? "selected" : "");
             $categorie .= "<option value='".$cat->getIdCategorie()."' ".$selected.">".utf8_encode($cat->getNom())."</option>";
         }
-        
+
         $img = "";
-      
+
         ob_start();
         include 'view/article_form.php';
         $content = ob_get_clean();
-
-        ob_start();
-        include 'view/widget_social.php';
-        $widget_social = ob_get_clean();
-    
-        ob_start();
-        include 'view/widget_partenaires.php';
-        $widget_partenaires = ob_get_clean();
 
         include 'layout.php';
     }
@@ -616,7 +544,7 @@ function showAdminModArticle()
     $name = "";
 
     $pageTitle = " - Modification d'un contenu";
-    
+
     if (isset($_POST["titre"])) {
         $ok = false;
 
@@ -624,16 +552,16 @@ function showAdminModArticle()
             $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
             $extension_upload = strtolower(  substr(  strrchr($_FILES['image']['name'], '.')  ,1)  );
             $image_sizes = getimagesize($_FILES['image']['tmp_name']);
-            
+
             if ($image_sizes[0] < 700 || $image_sizes[1] < 400) {
                 $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> L'image est trop petite! 700x400 minimum!</div>";
             } else if ( ! in_array($extension_upload,$extensions_valides) ) {
                 $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> L'extension de votre image n'est pas bonne!</div>";
             } else {
-                $taille_maxi = 512000;
+                $taille_maxi = 2000000;
                 $taille = filesize($_FILES['image']['tmp_name']);
                 if ($taille > $taille_maxi) {
-                    $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> La taille de votre fichier est supérieur à 512 Ko!</div>";
+                    $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> La taille de votre fichier est supérieur à 2Mo!</div>";
                 } else {
                     $name = to_permalink($_POST["titre"])."-".random(10).strrchr($_FILES['image']['name'], '.');
                     $nom = "img/articles/$name";
@@ -660,6 +588,7 @@ function showAdminModArticle()
         $permalien = to_permalink($_POST["titre"]);
 
         if (isset($_FILES["image"]) && ($_FILES["image"]['tmp_name'] != "") && $ok) {
+            unlink($article->getImage());
             $article->setImage($name, false);
         }
 
@@ -684,7 +613,7 @@ function showAdminModArticle()
     }
 
     $menu = getMenu();
-    $top = getTop(); 
+    $top = getTop();
 
     $titre = $article->getTitre();
     $idArticle = $article->getIdArticle();
@@ -700,7 +629,7 @@ function showAdminModArticle()
         $butPubNon = "btn-danger";
         $butPubOui = "";
     }
-    
+
     $img = "<tr>";
     $img .= "<td colspan='2'>";
     $img .= "<img src='img/articles/".$article->getImage()."' style='width:100%;' border='0' alt='Null' />";
@@ -716,9 +645,10 @@ function showAdminModArticle()
         $categorie .= "<option value='".$cat->getIdCategorie()."' ".$selected.">".utf8_encode($cat->getNom())."</option>";
     }
 
-    $admins = Groupe::load($mysql, 3);
-    $auteurs = Groupe::load($mysql, 2);
-    $membres = array_merge(Membre::selectByGroupe($mysql, $admins), Membre::selectByGroupe($mysql, $auteurs));
+    $admins = Groupe::load($mysql, 1);
+    $bureau = Groupe::load($mysql, 3);
+    $auteurs = Groupe::load($mysql, 4);
+    $membres = array_merge(Membre::selectByGroupe($mysql, $admins), Membre::selectByGroupe($mysql, $auteurs), Membre::selectByGroupe($mysql, $bureau));
     $auteur = "";
 
     foreach ($membres as $membre) {
@@ -730,14 +660,6 @@ function showAdminModArticle()
     include 'view/article_form.php';
     $content = ob_get_clean();
 
-    ob_start();
-    include 'view/widget_social.php';
-    $widget_social = ob_get_clean();
-    
-    ob_start();
-    include 'view/widget_partenaires.php';
-    $widget_partenaires = ob_get_clean();
-
     include 'layout.php';
 }
 
@@ -745,11 +667,312 @@ function showAdminSupArticle()
 {
     $mysql = openConnexion();
     $article = Article::load($mysql, $_POST["idArticle"]);
+    unlink($article->getImage());
     $article->delete();
 
     $host  = $_SERVER['HTTP_HOST'];
     $uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
     header("Location: http://$host$uri/index.php?v=admin&a=contenus");
 }
+
+function showAdminPartenaire()
+{
+    $mysql = openConnexion();
+
+    $pageTitle = " - Gestion des partenaires";
+
+    $menu = getMenu();
+    $top = getTop();
+
+    $partenaires = Partenaire::loadAll($mysql);
+
+    $table = "<table class='footable' data-filter='#filter' data-page-size='30'>";
+    $table .= "<thead>";
+    $table .= "<tr>";
+    $table .= "<th data-sort-initial='true'>Nom</th>";
+    $table .= "<th data-sort-ignore='true'>Logo</th>";
+    $table .= "<th data-hide='phone'>Site</th>";
+    $table .= "<th data-sort-ignore='true'>Actions</th>";
+    $table .= "</tr>";
+    $table .= "</thead>";
+    $table .= "<tbody>";
+    foreach ($partenaires as $partenaire) {
+        $table .= "<tr>";
+        $table .= "<td>".utf8_encode($partenaire->getNom())."</td>";
+        $table .= "<td class='logoPartenaire'><img alt='".$partenaire->getNom()."' src='".$partenaire->getImage()."' /></td>";
+        $table .= "<td>".$partenaire->getSite()."</td>";
+        $table .= "<td>";
+        $table .= "<button class='btn btn-primary btn-xs' onclick='modPartenaire(\"".$partenaire->getIdPartenaire()."\")'>Modifier</button>";
+        $table .= " ";
+        $table .= "<button class='btn btn-primary btn-xs' onclick='supPartenaire(\"".$partenaire->getIdPartenaire()."\")'>Supprimer</button>";
+        $table .= "</td>";
+        $table .= "</tr>";
+    }
+    $table .= "</tbody>";
+    $table .= "<tfoot class='hide-if-no-paging'>";
+    $table .= "<tr>";
+    $table .= "<td colspan='4'>";
+    $table .= "<div class='pagination pagination-centered'></div>";
+    $table .= "</td>";
+    $table .= "</tr>";
+    $table .= "</tfoot>";
+    $table .= "</table>";
+
+    ob_start();
+    include 'view/partenaires_liste.php';
+    $content = ob_get_clean();
+
+    include 'layout.php';
+}
+
+function showAdminNewPartenaire()
+{
+    $mysql = openConnexion();
+
+    $pageTitle = " - Nouveau partenaire";
+
+    $erreur = $nom = "";
+    $ok = false;
+
+    if (isset($_POST["nom"]) && isset($_POST["site"]) && isset($_FILES["image"])) {
+        if ($_FILES["image"]['tmp_name'] != "") {
+            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
+            $extension_upload = strtolower(  substr(  strrchr($_FILES['image']['name'], '.')  ,1)  );
+            $image_sizes = getimagesize($_FILES['image']['tmp_name']);
+
+            if ($image_sizes[0] < 200 || $image_sizes[1] < 200) {
+                $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> L'image est trop petite! 200x200 minimum!</div>";
+            } else if ( ! in_array($extension_upload,$extensions_valides) ) {
+                $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> L'extension de votre image n'est pas bonne!</div>";
+            } else {
+                $taille_maxi = 512000;
+                $taille = filesize($_FILES['image']['tmp_name']);
+                if ($taille > $taille_maxi) {
+                    $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> La taille de votre fichier est supérieur à 512 Ko!</div>";
+                } else {
+                    $name = to_permalink($_POST["titre"])."-".random(10).strrchr($_FILES['image']['name'], '.');
+                    $nom = "img/partenaires/$name";
+                    $resultat = move_uploaded_file($_FILES['image']['tmp_name'],$nom);
+                    if ($resultat) {
+                        $ok = true;
+                    } else {
+                        $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> Erreur lors de l'envoie du fichier!</div>";
+                    }
+                }
+            }
+        } else {
+            $ok = true;
+        }
+
+        if ($ok) {
+            Partenaire::create($mysql,$_POST["nom"],$nom,$_POST["site"]);
+            $host = $_SERVER['HTTP_HOST'];
+            $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+            header ("Location:http://$host$uri/index.php?v=admin&a=partenaires");
+        }
+    }
+
+    $menu = getMenu();
+    $top = getTop();
+
+    $idPartenaire = "";
+    $nom = "";
+    $site = "";
+    $image = "Logo du partenaire...";
+    $img = "";
+    $urlRetour = "index.php?v=admin&a=partenaires";
+    $action = "Créer";
+
+    ob_start();
+    include 'view/partenaire_form.php';
+    $content = ob_get_clean();
+
+    include 'layout.php';
+}
+
+function showAdminModPartenaire()
+{
+    $mysql = openConnexion();
+
+    $pageTitle = " - Modification d'un partenaire";
+
+    $partenaire = Partenaire::load($mysql, $_POST["idPartenaire"]);
+    $erreur = $nom = "";
+    $ok = false;
+
+    if (isset($_POST["nom"]) && isset($_POST["site"]) && isset($_FILES["image"])) {
+        if ($_FILES["image"]['tmp_name'] != "") {
+            $extensions_valides = array( 'jpg' , 'jpeg' , 'gif' , 'png' );
+            $extension_upload = strtolower(  substr(  strrchr($_FILES['image']['name'], '.')  ,1)  );
+            $image_sizes = getimagesize($_FILES['image']['tmp_name']);
+
+            if ($image_sizes[0] < 200 || $image_sizes[1] < 200) {
+                $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> L'image est trop petite! 200x200 minimum!</div>";
+            } else if ( ! in_array($extension_upload,$extensions_valides) ) {
+                $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> L'extension de votre image n'est pas bonne!</div>";
+            } else {
+                $taille_maxi = 512000;
+                $taille = filesize($_FILES['image']['tmp_name']);
+                if ($taille > $taille_maxi) {
+                    $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> La taille de votre fichier est supérieur à 512 Ko!</div>";
+                } else {
+                    $name = to_permalink($_POST["titre"])."-".random(10).strrchr($_FILES['image']['name'], '.');
+                    $nom = "img/partenaires/$name";
+                    $resultat = move_uploaded_file($_FILES['image']['tmp_name'],$nom);
+                    if ($resultat) {
+                        $ok = true;
+                    } else {
+                        $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> Erreur lors de l'envoie du fichier!</div>";
+                    }
+                }
+            }
+        } else {
+            $ok = true;
+        }
+
+        if ($ok) {
+            $partenaire->setNom($_POST["nom"], false);
+            unlink($partenaire->getImage());
+            $partenaire->setImage($nom, false);
+            $partenaire->setSite($_POST["site"], false);
+            $partenaire->update();
+            $host = $_SERVER['HTTP_HOST'];
+            $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+            header ("Location:http://$host$uri/index.php?v=admin&a=partenaires");
+        }
+    }
+
+    $menu = getMenu();
+    $top = getTop();
+
+    $idPartenaire = $partenaire->getIdPartenaire();
+    $nom = $partenaire->getNom();
+    $site = $partenaire->getSite();
+    $image = "Logo du partenaire...";
+    $img = "<img src='".$partenaire->getImage()."' />";
+    $urlRetour = "index.php?v=admin&a=partenaires";
+    $action = "Modifier";
+
+    ob_start();
+    include 'view/partenaire_form.php';
+    $content = ob_get_clean();
+
+    include 'layout.php';
+}
+
+function showAdminSupPartenaire()
+{
+    $mysql = openConnexion();
+    $partenaire = Partenaire::load($mysql, $_POST["idPartenaire"]);
+    unlink($partenaire->getImage());
+    $partenaire->delete();
+
+    $host  = $_SERVER['HTTP_HOST'];
+    $uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+    header("Location: http://$host$uri/index.php?v=admin&a=partenaires");
+}
+
+function showAdminPresse()
+{
+    $pageTitle = " - Gestion des revues de presse";
+
+    $mysql = openConnexion();
+
+    $ok = false;
+    $image = "";
+    $nom = "";
+    $erreur = "";
+
+    if (isset($_FILES["image"])) {
+        if ($_FILES["image"]['tmp_name'] != "") {
+            $extensions_valides = array( 'jpg' , 'jpeg' , 'png', 'pdf' );
+            $extension_upload = strtolower(  substr(  strrchr($_FILES['image']['name'], '.')  ,1)  );
+            $image_sizes = getimagesize($_FILES['image']['tmp_name']);
+
+            if (($image_sizes[0] < 700 || $image_sizes[1] < 400) && ($extension_upload != 'pdf')) {
+                $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> L'image est trop petite! 700x400 minimum!</div>";
+            } else if ( ! in_array($extension_upload,$extensions_valides) ) {
+                $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> L'extension de votre image n'est pas bonne!</div>";
+            } else {
+                $taille_maxi = 1000000;
+                $taille = filesize($_FILES['image']['tmp_name']);
+                if ($taille > $taille_maxi) {
+                    $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> La taille de votre fichier est supérieur à 1Mo!</div>";
+                } else {
+                    $name = random(10).strrchr($_FILES['image']['name'], '.');
+                    $nom = $_FILES['image']['name'];
+                    $image = "img/presses/$name";
+                    $resultat = move_uploaded_file($_FILES['image']['tmp_name'],$image);
+                    if ($resultat) {
+                        $ok = true;
+                    } else {
+                        $erreur .= "<div class='alert alert-danger'><strong>Erreur</strong> Erreur lors de l'envoie du fichier!</div>";
+                    }
+                }
+            }
+        } else {
+            $ok = true;
+        }
+
+        if ($ok) {
+            $presse = Presse::create($mysql, $nom, $image);
+
+            $host = $_SERVER['HTTP_HOST'];
+            $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+            header("Location: http://$host$uri/index.php?v=admin&a=presses");
+        }
+    }
+
+    $menu = getMenu();
+    $top = getTop();
+    $image = "Fichier...";
+
+    $presses = Presse::loadAll($mysql);
+    $table = "<table class='footable'>";
+    $table .= "<thead>";
+    $table .= "<tr>";
+    $table .= "<th data-sort-initial='true'>Nom</th>";
+    $table .= "<th data-sort-ignore='true'>Actions</th>";
+    $table .= "</tr>";
+    $table .= "</thead>";
+    $table .= "<tbody>";
+    foreach ($presses as $presse) {
+        $table .= "<tr>";
+        $table .= "<td><a class='imageListeRevue' href='".$presse->getImage()."'>".utf8_encode($presse->getNom())."</a></td>";
+        $table .= "<td>";
+        $table .= "<button class='btn btn-primary btn-xs' onclick='supPresse(\"".$presse->getIdPresse()."\")'>Supprimer</button>";
+        $table .= "</td>";
+        $table .= "</tr>";
+    }
+    $table .= "</tbody>";
+    $table .= "<tfoot class='hide-if-no-paging'>";
+    $table .= "<tr>";
+    $table .= "<td colspan='2'>";
+    $table .= "<div class='pagination pagination-centered'></div>";
+    $table .= "</td>";
+    $table .= "</tr>";
+    $table .= "</tfoot>";
+    $table .= "</table>";
+
+    ob_start();
+    include 'view/presses_liste.php';
+    $content = ob_get_clean();
+
+    include 'layout.php';
+
+}
+
+function showAdminSupPresse()
+{
+    $mysql = openConnexion();
+    $presse = Presse::load($mysql, $_POST["idPresse"]);
+    unlink($presse->getImage());
+    $presse->delete();
+
+    $host  = $_SERVER['HTTP_HOST'];
+    $uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+    header("Location: http://$host$uri/index.php?v=admin&a=presses");
+}
+
 
 ?>

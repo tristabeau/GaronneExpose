@@ -19,22 +19,19 @@ $mysql = openConnexion();
 $admin = false;
 $artiste = false;
 
-if (isset($_COOKIE["membre"])) {
-    $_SESSION["idArtiste"] = $_COOKIE["membre"];
+if (isset($_COOKIE["artiste"])) {
+    $_SESSION["idArtiste"] = $_COOKIE["artiste"];
 }
 
 if (isset($_SESSION["idArtiste"])) {
     $membreCo = Membre::load($mysql, $_SESSION["idArtiste"]);
-    if ($membreCo->getGroupeId() == 3) {
+    if ($membreCo->getGroupeId() == 1) {
         $admin = true;
     }
-    if (($membreCo->getGroupeId() == 2) || ($membreCo->getGroupeId() == 4)) {
+    if (($membreCo->getGroupeId() == 3) || ($membreCo->getGroupeId() == 4)) {
         $artiste = true;
     }
 }
-
-//var_dump($_GET);
-//die();
 
 //Dispatcheur
 if (isset($_GET["v"])) {
@@ -69,6 +66,14 @@ if (isset($_GET["v"])) {
 
         case "contact":
             showContact();
+            break;
+
+        case "presses":
+            showPresse();
+            break;
+
+        case "partenaires":
+            showPartenaire();
             break;
 
         case "404":
@@ -134,7 +139,7 @@ if (isset($_GET["v"])) {
                         showAdminSupArticle();
                         break;
 
-                    case "categorie":
+                    case "categories":
                         showAdminCategorie();
                         break;
 
@@ -150,7 +155,7 @@ if (isset($_GET["v"])) {
                         showAdminNewCat();
                         break;
 
-                    case "groupe":
+                    case "groupes":
                         if ($admin) {
                             showAdminGroupe();
                         } else {
@@ -193,6 +198,62 @@ if (isset($_GET["v"])) {
                     case "newArtiste":
                         if ($admin) {
                             showAdminNewMembre();
+                        } else {
+                            show404();
+                        }
+                        break;
+
+                    case "partenaires":
+                        if ($admin) {
+                            showAdminPartenaire();
+                        } else {
+                            show404();
+                        }
+                        break;
+
+                    case "newPartenaire":
+                        if ($admin) {
+                            showAdminNewPartenaire();
+                        } else {
+                            show404();
+                        }
+                        break;
+
+                    case "modPartenaire":
+                        if ($admin) {
+                            showAdminModPartenaire();
+                        } else {
+                            show404();
+                        }
+                        break;
+
+                    case "supPartenaire":
+                        if ($admin) {
+                            showAdminSupPartenaire();
+                        } else {
+                            show404();
+                        }
+                        break;
+
+                    case "presses":
+                        if ($admin) {
+                            showAdminPresse();
+                        } else {
+                            show404();
+                        }
+                        break;
+
+                    case "modPresse":
+                        if ($admin) {
+                            showAdminModPresse();
+                        } else {
+                            show404();
+                        }
+                        break;
+
+                    case "supPresse":
+                        if ($admin) {
+                            showAdminSupPresse();
                         } else {
                             show404();
                         }

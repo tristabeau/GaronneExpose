@@ -1,6 +1,6 @@
+<div class="header clearfix"><h4><?php echo $pseudo;  ?></h4></div>
 <div id="profil">
-    <img src="" alt="avatar" class="avatar"/>
-    <h1><?php echo $pseudo;  ?></h1>
+    <img src="<?php echo $avatar ?>" alt="avatar" class="avatar"/>
     <p><?php echo $desc;  ?></p>    
     <ul class="social clearfix">
         <?php if (isset($facebook)) { ?>

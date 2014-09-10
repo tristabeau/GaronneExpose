@@ -5,7 +5,7 @@
         <title>Garonne Expose <?php echo $pageTitle; ?></title>
         <!-- <base href="http://37.59.55.9/news/"> -->
         <!-- <base href="http://37.59.55.9/news/"> -->
-        <base href="http://localhost/GaronneExpose/">
+        <base href="http://37.59.55.9/GaronneExpose/">
         <meta charset="UTF-8">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -65,9 +65,9 @@
                 
         <!-- CONTENT
         ==================================================================== -->
-        <div id="content"> 
-        
-            <?php if(isset($page_title)) { echo $page_title; } ?>
+        <div id="content">
+
+            <div id="titreSite"><img src="./img/titre.png"/></div>
 
             <!-- Main Container 
             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
@@ -77,7 +77,7 @@
                 
                     <!-- CENTER CONTENT
                     ======================================================== -->
-                    <div id="center-content" class="col-md-10">
+                    <div id="center-content" class="col-md-9">
 
                         <?php if(isset($articles_liste)) { echo $articles_liste; } ?>
                         
@@ -87,19 +87,21 @@
                         
                         <?php if(isset($error404)) { echo $error404; } ?>
 
+                        <?php if(isset($contact)) { echo $contact; } ?>
+
                     </div><!--#center-content-->
 
                     <!-- SIDE CONTENT
                     ======================================================== -->
-                    <aside id="right-content" class="col-md-2">
+                    <aside id="right-content" class="col-md-3">
                         <?php if(isset($widget_social)) { echo $widget_social; } ?>
 
                         <?php if(isset($widget_partenaires)) { echo $widget_partenaires; } ?>
+
+                        <?php if(isset($widget_gallerie)) { echo $widget_gallerie; } ?>
                     </aside><!--#side-content-->
 
                 </div><!--.row-->
-                
-                <?php if(isset($contact)) { echo $contact; } ?> 
                 
             </div><!--.container-->
                         
@@ -109,29 +111,15 @@
         ==================================================================== -->
         <footer>
             
-            <!-- MAIN FOOTER
-            ================================================================ -->
-            <div id="footer-main">
-                
-                <div class="container">
-
-                    <div class="row">
-
-
-                    </div><!--.row-->
-
-                </div><!--.container-->
-                
-            </div><!--#footer-main-->
-            
             <!-- FOOTER BOTTOM 
             ================================================================ -->
             <div id="footer-bottom">
                 
                 <div class="container">
                     
-                    <p>Copyright &copy; 2014 - <strong>Garonne Expose</strong></p>
-                    
+                    <p>Copyright &copy; 2014 - <strong>Garonne Expose</strong></p><br />
+                    <p>Code fait par <strong><a target="_blank" href="mailto:alexis.lapasset@gmail.com">Alexis Lapasset</a></strong></p>
+
                     <ul>
                         <li><a href="contact">Contact</a></li>
                     </ul>
@@ -153,8 +141,7 @@
 		<script src="lib/footable/js/footable.sort.js"></script>
 		<script src="lib/footable/js/footable.filter.js"></script>
 		<script src="lib/footable/js/footable.paginate.js"></script>
-        <script src="lib/ckeditor/ckeditor.js"></script>        
-        <script src="lib/ckeditor/spoiler.js"></script>        
+        <script src="lib/ckeditor/ckeditor.js"></script>
         <script src="js/script.js"></script>
         <script src="lib/hyphen/Hyphenator.js" ></script>
         
@@ -162,15 +149,12 @@
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <script type="text/javascript">
             
-           +function ($) { "use strict"; 
-
-                new $.CarouselAnimation('#carousel-large');
-           
+           +function ($) { "use strict";
                /*
                 * Nivo Lightbox 
                 * --------------------------------------------------------------
                 */
-               $('.image a:has(.fa-search-plus), #main-content .frame > a:not(.lien_titre):not(#lienTitreUne)').nivoLightbox({
+               $('.image a:has(.fa-search-plus), #main-content .frame > a:not(.lien_titre):not(#lienTitreUne), .imageDetailArticle, .imageListeRevue').nivoLightbox({
                    effect  : 'fadeScale'
                });
                
@@ -183,21 +167,6 @@
                     duration        : 20000,     
                     pauseOnHover    : true
                 });
-               
-               // Don't run on small devices
-               if( $(window).width() >= 768 ) {                
-        
-                    /*
-                     * JQUERY ZOOM
-                     * ---------------------------------------------------------------------
-                     */
-                    $('.article-large .frame [data-zoom]').each(function () {
-                        $(this).zoom({
-                            url: $(this).attr('href')
-                        });
-                    });
-
-                }      
                
                 $('.footable').footable();                
                 

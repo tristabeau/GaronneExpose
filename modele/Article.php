@@ -67,7 +67,7 @@ class Article extends Base_Article
         }
 
         return self::fetchAll($pdo,$pdoStatement);
-    } 
+    }
     
     /**
      * Charger les évènements
@@ -96,8 +96,37 @@ class Article extends Base_Article
         }
 
         return self::fetchAll($pdo,$pdoStatement);
-    } 
-    
+    }
+
+    /**
+     * Charger les évènements
+     * @return articles
+     */
+    public static function selectPeintureByArtiste(PDO $pdo, $membre)
+    {
+        $pdoStatement = self::_select($pdo,Article::FIELDNAME_MEMBRE_IDMEMBRE.' = '.$membre->getIdMembre().' AND '.
+                                                        Article::FIELDNAME_CATEGORIE_IDCATEGORIE.' = 2');
+        if (!$pdoStatement->execute()) {
+            throw new Exception('Erreur lors du chargement de tous/toutes les articles d\'un(e) categorie depuis la base de données');
+        }
+
+        return self::fetchAll($pdo,$pdoStatement);
+    }
+
+    /**
+     * Charger les évènements
+     * @return articles
+     */
+    public static function getPeintures(PDO $pdo)
+    {
+        $pdoStatement = self::_select($pdo, Article::FIELDNAME_CATEGORIE_IDCATEGORIE.' = 2');
+        if (!$pdoStatement->execute()) {
+            throw new Exception('Erreur lors du chargement de tous/toutes les articles d\'un(e) categorie depuis la base de données');
+        }
+
+        return self::fetchAll($pdo,$pdoStatement);
+    }
+
     /**
      * compter les évènements
      * @return articles 
@@ -271,13 +300,13 @@ class Article extends Base_Article
     /**
      * @return les années où il y a eu des articles;
      */
-    public static function selectDistinctAnnee(PDO $pdo, $cat)
+    public static function selectDistinctAnnee(PDO $pdo, $cat = "1,2,3")
     {
        
         $pdoStatement = $pdo->prepare('SELECT DISTINCT '.Article::FIELDNAME_ANNEE.
                                                     ' FROM '.Article::TABLENAME.
                                                     ' WHERE '.Article::FIELDNAME_PUBLIE.' = 1'.
-                                                    ' AND '.Article::FIELDNAME_CATEGORIE_IDCATEGORIE.' = '.$cat.
+                                                    ' AND '.Article::FIELDNAME_CATEGORIE_IDCATEGORIE.' IN ('.$cat.')'.
                                                     ' ORDER BY '.Article::FIELDNAME_ANNEE.' DESC');
                                                     
         if (!$pdoStatement->execute()) {
@@ -290,35 +319,35 @@ class Article extends Base_Article
     /**
      * @return les mois d'une année où il y a eu des articles;
      */
-    public static function selectDistinctMois(PDO $pdo, $annee, $cat)
+    public static function selectDistinctMois(PDO $pdo, $annee, $cat = "1,2,3")
     {
        
         $pdoStatement = $pdo->prepare('SELECT DISTINCT '.Article::FIELDNAME_MOIS.
                                                     ' FROM '.Article::TABLENAME.
                                                     ' WHERE '.Article::FIELDNAME_ANNEE.' = ?'.
                                                     ' AND '.Article::FIELDNAME_PUBLIE.' = 1'.
-                                                    ' AND '.Article::FIELDNAME_CATEGORIE_IDCATEGORIE.' = '.$cat.
+                                                    ' AND '.Article::FIELDNAME_CATEGORIE_IDCATEGORIE.' IN ('.$cat.')'.
                                                     ' ORDER BY '.Article::FIELDNAME_MOIS.' DESC');
-                                                    
+
         if (!$pdoStatement->execute(array($annee))) {
             throw new Exception('Erreur lors du chargement de l article depuis la base de données');
         }
-        
+
         return $pdoStatement->fetchAll();
     }  
     
     /**
      * @return les jours d'un mois d'une année où il y a eu des articles;
      */
-    public static function selectDistinctJours(PDO $pdo, $annee, $mois, $cat)
+    public static function selectDistinctJours(PDO $pdo, $annee, $mois, $cat = "1,2,3")
     {
-       
+
         $pdoStatement = $pdo->prepare('SELECT DISTINCT '.Article::FIELDNAME_JOUR.
                                                     ' FROM '.Article::TABLENAME.
                                                     ' WHERE '.Article::FIELDNAME_ANNEE.' = ?'.
                                                     ' AND '.Article::FIELDNAME_MOIS.' = ?'.
                                                     ' AND '.Article::FIELDNAME_PUBLIE.' = 1'.
-                                                    ' AND '.Article::FIELDNAME_CATEGORIE_IDCATEGORIE.' = '.$cat.
+                                                    ' AND '.Article::FIELDNAME_CATEGORIE_IDCATEGORIE.'  IN ('.$cat.')'.
                                                     ' ORDER BY '.Article::FIELDNAME_JOUR.' DESC');
                                                     
         if (!$pdoStatement->execute(array($annee, $mois))) {
@@ -338,12 +367,13 @@ class Article extends Base_Article
                                                     ' FROM '.Article::TABLENAME.
                                                     ' WHERE '.Article::FIELDNAME_MEMBRE_IDMEMBRE.' = '.$idMembre.
                                                     ' AND '.Article::FIELDNAME_PUBLIE.' = 1'.
+                                                    ' AND '.Article::FIELDNAME_CATEGORIE_IDCATEGORIE.'  IN (2)'.
                                                     ' ORDER BY '.Article::FIELDNAME_ANNEE.' DESC');
                                                     
         if (!$pdoStatement->execute()) {
             throw new Exception('Erreur lors du chargement de l article depuis la base de données');
         }
-        
+
         return $pdoStatement->fetchAll();
     }  
     
@@ -358,6 +388,7 @@ class Article extends Base_Article
                                                     ' WHERE '.Article::FIELDNAME_MEMBRE_IDMEMBRE.' = '.$idMembre.
                                                     ' AND '.Article::FIELDNAME_ANNEE.' = ?'.
                                                     ' AND '.Article::FIELDNAME_PUBLIE.' = 1'.
+                                                    ' AND '.Article::FIELDNAME_CATEGORIE_IDCATEGORIE.'  IN (2)'.
                                                     ' ORDER BY '.Article::FIELDNAME_MOIS.' DESC');
                                                     
         if (!$pdoStatement->execute(array($annee))) {
@@ -379,6 +410,7 @@ class Article extends Base_Article
                                                     ' AND '.Article::FIELDNAME_ANNEE.' = ?'.
                                                     ' AND '.Article::FIELDNAME_MOIS.' = ?'.
                                                     ' AND '.Article::FIELDNAME_PUBLIE.' = 1'.
+                                                    ' AND '.Article::FIELDNAME_CATEGORIE_IDCATEGORIE.'  IN (2)'.
                                                     ' ORDER BY '.Article::FIELDNAME_JOUR.' DESC');
                                                     
         if (!$pdoStatement->execute(array($annee, $mois))) {

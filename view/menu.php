@@ -11,7 +11,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="."><img src="img/logo.png" alt="logo"></a>
+            <a class="navbar-brand" id="logo" href="."><img src="img/logo.png" alt="logo"></a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -33,8 +33,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Médias <b class="caret"></b></a>
                     <ul class="nav dropdown-menu">
                         <li><a href="evenements">Évènements</a></li>
-                        <li><a href="">Galerie</a></li>
-                        <li><a href="">Revue de presse</a></li>
+                        <li><a href="presses">Revue de presse</a></li>
                     </ul>
                 </li>
                 <li><a href="partenaires">Partenaires</a></li>
@@ -43,10 +42,12 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administration <b class="caret"></b></a>
                     <ul class="nav dropdown-menu">
                         <?php if ($admin) { ?>
-                            <li><a href="index.php?v=admin&a=groupe">Gestion des groupes</a></li>
+                            <li><a href="index.php?v=admin&a=groupes">Gestion des groupes</a></li>
                             <li><a href="index.php?v=admin&a=artistes">Gestion des artistes</a></li>
+                            <li><a href="index.php?v=admin&a=categories">Gestion des catégories</a></li>
+                            <li><a href="index.php?v=admin&a=presses">Gestion des revues de presse</a></li>
+                            <li><a href="index.php?v=admin&a=partenaires">Gestion des partenaires</a></li>
                         <?php } ?>
-                        <li><a href="index.php?v=admin&a=categorie">Gestion des catégories</a></li>
                         <li><a href="index.php?v=admin&a=contenus">Gestion des contenus</a></li>
                     </ul>
                 </li>

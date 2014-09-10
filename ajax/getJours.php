@@ -11,7 +11,7 @@ require '../tools/functions.php';
 // connexion avec la base de données
 $mysql = openConnexion();
 
-$jours = Article::selectDistinctJours($mysql, $_POST["annee"], $_POST["mois"], intval( $_POST["cat"]));
+$jours = Article::selectDistinctJours($mysql, $_POST["annee"], $_POST["mois"], (($_POST["cat"] == "all") ? "1,2,3" : intval($_POST["cat"])));
 $res = "<option value='all'>Tous</option>";
      
 foreach ($jours as $jour) {

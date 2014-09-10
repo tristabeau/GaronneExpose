@@ -11,7 +11,7 @@ require '../tools/functions.php';
 // connexion avec la base de donn�es
 $mysql = openConnexion();
 
-$mois = Article::selectDistinctMois($mysql, $_POST["annee"], intval( $_POST["cat"]));
+$mois = Article::selectDistinctMois($mysql, $_POST["annee"], (($_POST["cat"] == "all") ? "1,2,3" : intval($_POST["cat"])));
 $res = "<option value='all'>Tous</option>";
      
 foreach ($mois as $m) {

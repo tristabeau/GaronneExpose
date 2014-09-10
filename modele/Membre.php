@@ -52,7 +52,7 @@ class Membre extends Base_Membre
      */
     public static function selectArtistes(PDO $pdo)
     {
-        $pdoStatement = self::_select($pdo,array(Membre::FIELDNAME_GROUPE_IDGROUPE.' IN (3,4)'));
+        $pdoStatement = self::_select($pdo,array(Membre::FIELDNAME_GROUPE_IDGROUPE.' IN (1,3,4)'),Membre::FIELDNAME_PSEUDO.' ASC');
         if (!$pdoStatement->execute()) {
             throw new Exception('Erreur lors du chargement des membres depuis la base de données');
         }

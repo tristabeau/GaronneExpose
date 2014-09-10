@@ -1,6 +1,6 @@
 <html>    
     <head>
-        <title>LanceA News</title>
+        <title>Garonne Expose</title>
     </head>
     
     <body>
@@ -14,7 +14,7 @@
             
             Merci pour votre soutien ! <br /><br />
             
-            Le staff LanceA.
+            L'équipe Garonne Expose.
         </div>         
     </body>    
 </html>

@@ -10,7 +10,7 @@ require '../tools/config.php';
 //On inclut le fichier de fonctions
 require '../tools/functions.php';
 
-// connexion avec la base de données
+// connexion avec la base de donnï¿½es
 $mysql = openConnexion();
 
 //Si le membre existe
@@ -20,8 +20,8 @@ if (isset($_POST["login"])) {
         $pass = md5(md5($membre[0]->getSalt()).md5($_POST["password"]));
         if ($pass == $membre[0]->getMdp()) {
             if ($membre[0]->getActive()) {
-                $_SESSION["idMembre"] = $membre[0]->getIdMembre();
-                setCookie('membre', $membre[0]->getIdMembre(), time()+60*60*24*30, "/"); //30j
+                $_SESSION["idArtiste"] = $membre[0]->getIdMembre();
+                setCookie('artiste', $membre[0]->getIdMembre(), time()+60*60*24*30, "/"); //30j
                 echo "2";
             } else {
                 echo "1";

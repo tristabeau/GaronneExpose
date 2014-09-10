@@ -1,3 +1,31 @@
+#content {
+    background: url(../img/fondFinal.jpg) no-repeat;
+    -webkit-background-size: cover; /* pour Chrome et Safari */
+    -moz-background-size: cover; /* pour Firefox */
+    -o-background-size: cover; /* pour Opera */
+    background-size: cover; /* version standardisée */
+}
+
+
+.imageListeRevue:hover {
+    color: black !important;
+    background-color: transparent !important;
+}
+
+#logo{
+    float: none;
+}
+
+#titreSite {
+    margin-top: 30px;
+}
+
+.listeArticle, .article-small{
+    background-color: white;
+    border: 1px solid rgb(209, 209, 209);
+    padding: 5px;
+}
+
 .listeArticle .frame, .listeArticle .container-link {
     max-height: 204px;
     overflow: hidden;
@@ -10,6 +38,8 @@
 #boutonTous{
     width: 100%;
     text-align: center;
+    background-color: rgb(238,238,238);
+    padding: 10px;
 }
 
 .breaking-news h4{
@@ -19,28 +49,52 @@
 a:link{text-decoration:none !important;}
 
 a {
-    color: rgb(176, 176, 184) !important;
+    color: white !important;
+}
+
+article .post-meta a {
+    color: #464649 !important;
+}
+
+article .post-meta a:hover {
+    color: #9f583c !important;
+}
+
+#main-nav a {
+    color: #9f583c !important;
+}
+
+#top-nav button {
+    color:white !important;
+}
+
+#main-nav li a:hover {
+    background-color: #9f583c !important;
+    color: white !important;
+    -webkit-box-shadow: inset 0 30px 0 0 rgba(255,255,255,.16);
+    -moz-box-shadow: inset 0 30px 0 0 rgba(255,255,255,.16);
+    box-shadow: inset 0 30px 0 0 rgba(255,255,255,.16);
 }
 
 small {
-    color: #b0b0b8;
+    color: #464649;
     font-family: "Roboto Condensed","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
 a:focus, a:hover {
-    color: #660000 !important;
-    background-color: transparent !important;
+    color: #9f583c !important;
+    background-color: white !important;
 }
 
 #top-nav a:focus, #top-nav a:hover {
-    background-color: #660000 !important;
+    background-color: #9f583c !important;
     color: white !important;
 }
 
 input:-webkit-autofill { background-color: #ff00ff; }
 
  h2, h3, h5, h6, .h2, .h3, .h5, .h6, article h4 {
-    color: #660000 !important;
+    color: #9f583c !important;
     font-style: normal !important;
 }
 
@@ -50,27 +104,32 @@ h4, .h4{
 }
 
 .tags a{
-    color: #660000 !important;
-    border-color: #660000 !important;
+    color: #9f583c !important;
+    border-color: #9f583c !important;
 }
 
 .tags a:focus, .tags a:hover {
-    background-color: #660000 !important;
+    background-color: #9f583c !important;
     color: white !important;
 }
 
 .btn-primary{
-    background-color: #660000 !important;
-    border-color: #660000 !important;
+    background-color: #9f583c !important;
+    border-color: #9f583c !important;
 }
 
-#carousel-large a {
-    color: white !important;
+.listeArticle .link a:hover {
+    color: #9f583c !important;
 }
 
 .link a:hover, .link a:focus {
     color: white !important;
 }
+
+.read-more a:hover {
+    background-color : rgb(255, 232, 232) !important;
+}
+
 .link {
     color: white !important;
 }
@@ -79,13 +138,13 @@ h4, .h4{
     color: white !important;
 }
 
-#carousel-large a:hover, #carousel-large a:focus  {
-    background-color: transparent !important;
+#main-nav .navbar-nav>li>a:hover, #main-nav .navbar-nav>li>a:focus {
+    background-color: #9f583c !important;
+    color: white !important;
 }
 
-#main-nav .navbar-nav>li>a:hover, #main-nav .navbar-nav>li>a:focus {
-    background-color: #660000 !important;
-    color: white !important;
+.widget>.header {
+    margin: 0;
 }
 
 #footer-bottom a, #main-nav .navbar-nav>li.active>a{
@@ -93,7 +152,7 @@ h4, .h4{
 }
 
 .dropdown-menu>.active>a {
-    background-color: #660000 !important;
+    background-color: #9f583c !important;
     color: white !important;
 }
 
@@ -112,7 +171,7 @@ h4, .h4{
 }
 
 .comment-content a{
-    color: #660000 !important;
+    color: #9f583c !important;
 }
 
 .title-container .secondary a:hover, .title-container .secondary a:focus {
@@ -127,11 +186,7 @@ h4, .h4{
 
 .widget .nav-tabs li.active a, .widget .nav-tabs li a:hover, .widget .nav-tabs li a:focus {
     color: white !important;
-    background-color: #660000 !important;
-}
-
-#recent{
-    padding: 0 !important;
+    background-color: #9f583c !important;
 }
 
 .nav-tabs li a {
@@ -148,6 +203,7 @@ h4, .h4{
     border: 1px solid #e0e0e8;
     width:100%;
     padding: 20px;
+    background-color: rgb(238,238,238) !important;
     text-align: center;
 }
 
@@ -171,6 +227,15 @@ body{
     margin-right: 10px;
 }
 
+.logoPartenaire{
+    text-align: center !important;
+}
+
+.logoPartenaire img{
+    max-height: 204px;
+    width: auto;
+}
+
 #loggedProfil .avatar {
     float: left;
     background-color: white;
@@ -179,7 +244,7 @@ body{
 }
 
 #loggedProfil .pseudo, #loggedProfil .navbar-nav {
-    color: rgb(176, 176, 184) !important;
+    color: white !important;
     float: left;
 }
 
@@ -234,7 +299,7 @@ textarea{
     }
 
     #center-content{
-        padding-top: 60px !important;
+        padding-top: 30px !important;
         margin-bottom: 10px;
     }
 
@@ -275,17 +340,17 @@ textarea{
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     overflow: hidden;
     cursor: pointer;
-    text-align: left;
+    text-align: center;
     float: left;
     width:40%;
 }
 .myui-button span{
     cursor: pointer;
     text-align: center;
+    margin: auto;
     font-size: 14px;
     line-height: 20px;
     color: #FFFFFF;
-    margin-left: 20px;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 
@@ -335,10 +400,16 @@ table label{
 
 .article-large .avatar{
     background-color: white;
+    height: 100%;
 }
 
 .article-large .icons a {
     height : 75px;
+}
+
+.article-large .mainImage {
+    max-width: 900px;
+    margin: auto;
 }
 
 #erreurId, #erreurActive{
@@ -396,13 +467,25 @@ table label{
         margin-left: 5px;
     }
 }
+
 #paginationBox{
+    background-color: rgb(238,238,238) !important;
     width:100%;
     text-align: center;
+    padding: 10px;
 }
 
 .pagination{
     margin: auto !important;
+}
+
+.pagination li:not(.active) a{
+    color: #9f583c !important;
+}
+
+.pagination li:not(.active) a:hover{
+    background-color: #9f583c !important;
+    color: white !important;
 }
 
 .fixNavigation{
@@ -424,8 +507,56 @@ table label{
 
 #filtres{
     padding: 10px;
+    background-color: rgb(238,238,238);
 }
 
 #filtres td{
     padding: 5px;
+}
+
+#center-content .row {
+    margin: 0 !important;
+    background-color: rgb(238,238,238);
+    padding: 10px;
+}
+
+.header h4 {
+    float: left;
+    padding: 5.5px 10px;
+    color: #f0f0f8;
+    background-color: #9f583c;
+    -webkit-box-shadow: inset 0 15px 0 0 rgba(255,255,255,.12);
+    -moz-box-shadow: inset 0 15px 0 0 rgba(255,255,255,.12);
+    box-shadow: inset 0 15px 0 0 rgba(255,255,255,.12);
+}
+
+#main-nav {
+    background-color: rgb(238,238,238) !important;
+    -webkit-box-shadow: inset 0 30px 0 0 rgb(238,238,238),0 0 1px 0 rgba(0,0,0,.4) !important;
+    -moz-box-shadow: inset 0 30px 0 0 rgb(238,238,238),0 0 1px 0 rgba(0,0,0,.4) !important;
+    box-shadow: inset 0 30px 0 0 rgb(238,238,238),0 0 1px 0 rgba(0,0,0,.4) !important;
+}
+
+.sitePartenaire{
+    color: #9f583c !important;
+}
+
+.social {
+    background-color: rgb(238,238,238) !important;
+    margin: 0 !important;
+    padding: 10px !important;
+}
+.social li{
+    margin: 0 5px !important;
+}
+.carousel .carousel-control span {
+    color: white !important;
+}
+
+.carousel{
+    max-height: none !important;
+}
+
+.imageListeRevue {
+    color: #9f583c !important;
 }

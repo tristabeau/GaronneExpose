@@ -1,3 +1,5 @@
+<div class="header clearfix"><h4>Contact</h4></div>
+
 <div class="row">
     <div id="map"></div>
     <br />
